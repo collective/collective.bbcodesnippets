@@ -1,0 +1,4 @@
+include *.rst
+exclude *.txt plone-*.cfg base.cfg
+graft src
+global-exclude *pyc *.pyo
