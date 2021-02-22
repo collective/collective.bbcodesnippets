@@ -41,7 +41,7 @@ jobs:
         restore-keys: eggs-
     - name: Run buildout
       run: |
-        buildout -c plone-${{ matrix.plone-version }}-${{ matrix.plone-version }}.x.cfg
+        buildout -c plone-${{ matrix.plone-version }}.x.cfg
     - name: Run tests
       run: |
         bin/test
