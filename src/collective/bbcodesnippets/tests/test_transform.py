@@ -12,7 +12,6 @@ class TestTranformer(unittest.TestCase):
         from collective.bbcodesnippets.transform import BBCodeSnippetsTransform
 
         class DummyResponse:
-            
             def getHeader(self, name):
                 if name == "Content-Type":
                     return "text/html"
@@ -24,7 +23,7 @@ class TestTranformer(unittest.TestCase):
                 return DummyResponse()
 
         transformer = BBCodeSnippetsTransform(None, DummyRequest())
-        result =  transformer.transformIterable(source, None)
+        result = transformer.transformIterable(source, None)
         return result
 
     def _register_formatter(self):
@@ -108,4 +107,3 @@ class TestTranformer(unittest.TestCase):
         self._register_formatter()
         result = self._do_transform(source)
         self.assertIn(transformed, result.serialize())
-

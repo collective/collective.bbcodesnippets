@@ -24,9 +24,9 @@ class TestParserBasic(unittest.TestCase):
     def test_non_empty_create_parser(self):
         """Test if a naked parser is created"""
         from collective.bbcodesnippets.interfaces import IFormatterFactory
-        from zope.interface import provider
-        from zope.component import provideUtility
         from collective.bbcodesnippets.parser import create_parser
+        from zope.component import provideUtility
+        from zope.interface import provider
 
         TRANSFORMED = "DUMMY"
 

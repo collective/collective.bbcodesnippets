@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<object name="portal_controlpanel">
+  <configlet action_id="BBCodeSnippets"
+             appId="BBCodeSnippets"
+             category="Products"
+             condition_expr=""
+             remove="True"
+             title="BBCode Snippets"
+  >
+  </configlet>
+</object>
