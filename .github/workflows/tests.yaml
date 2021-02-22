@@ -36,11 +36,12 @@ jobs:
       with:
         path: |
           eggs
-        key: eggs-${{ hashFiles('**/*.cfg') }}
+          downloads
+        key: eggs-${{ matrix.python-version }}-${{ hashFiles('**/*.cfg') }}
         restore-keys: eggs-
     - name: Run buildout
       run: |
-        buildout -c plone-${{ matrix.plone-version }}.x.cfg
+        buildout -c plone-${{ matrix.plone-version }}-${{ matrix.plone-version }}.x.cfg
     - name: Run tests
       run: |
         bin/test
