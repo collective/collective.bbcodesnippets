@@ -21,25 +21,25 @@ class TestParserBasic(unittest.TestCase):
 
     layer = UNIT_TESTING
 
-    def test_empty_create_parser(self):
+    def test_non_empty_create_parser(self):
         """Test if a naked parser is created"""
-
-        def dummy_formatter(name, value, options, parent, context):
-            return "DUMMY"
-
         from collective.bbcodesnippets.interfaces import IFormatterFactory
         from zope.interface import provider
+        from zope.component import provideUtility
+        from collective.bbcodesnippets.parser import create_parser
+
+        TRANSFORMED = "DUMMY"
+
+        def dummy_formatter(name, value, options, parent, context):
+            return TRANSFORMED
 
         @provider(IFormatterFactory)
         def dummy_factory():
-            return dummy_formatter, {}
+            return dummy_formatter, {"standalone": True}
 
-        from zope.component import provideUtility
-
+        # breakpoint()
         provideUtility(dummy_factory, name="dummy")
-
-        from collective.bbcodesnippets.parser import create_parser
 
         parser = create_parser()
 
-        self.assertEqual(parser.format("[dummy]"), "DUMMY")
+        self.assertEqual(parser.format("[dummy]"), TRANSFORMED)

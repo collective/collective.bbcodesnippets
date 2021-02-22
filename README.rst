@@ -33,7 +33,9 @@ Install collective.bbcodesnippets by adding it to your buildout::
 
 and then running ``buildout``.
 
-Afterwards (re)start Plone, go to the controlpanel and 
+Afterwards (re)start Plone, go to the controlpanel and install the addon. 
+
+Then there is a conrol-panel to control the allowed BBcodes.
 
 
 Source Code

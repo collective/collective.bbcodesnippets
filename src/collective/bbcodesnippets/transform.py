@@ -1,3 +1,4 @@
+from .interfaces import IBBCodeSnippetsLayer
 from .parser import create_parser
 from lxml import etree
 from plone.transformchain.interfaces import ITransform
@@ -54,14 +55,14 @@ class BBCodeSnippetsTransform(object):
         return self.transformIterable([result], encoding)
 
     def transformIterable(self, result, encoding):
-        parser = create_parser()
         result = self.parseTree(result)
         if result is None:
             return None
+        parser = create_parser()
         denylist = self.denylist()
-        for el in etree.iterwalk(result.tree):
+        for action, el in etree.iterwalk(result.tree):
             if el.text and el.tag.lower() not in denylist:
-                el.text = parser.transform(el.text)
+                el.text = parser.format(el.text)
             if el.tail and el.getParent().tag.lower() not in denylist:
-                el.tail = parser.transform(el.tail)
+                el.tail = parser.format(el.tail)
         return result

@@ -17,6 +17,6 @@ def create_parser():
     )
     for name, factory in getUtilitiesFor(IFormatterFactory):
         __traceback_info__ = name
-        formatter, options = factory()
+        formatter, options = factory()   
         parser.add_formatter(name, formatter, **options)
     return parser
