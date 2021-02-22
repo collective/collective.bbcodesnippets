@@ -1,12 +1,16 @@
+from .mocks import mock_get_registry_record
 from plone.testing.zca import UNIT_TESTING
+from unittest import mock
+from unittest import TestCase
 
-import unittest
 
-
-class TestParserBasic(unittest.TestCase):
+@mock.patch(
+    "plone.api.portal.get_registry_record", new_callable=mock_get_registry_record
+)
+class TestParserBasic(TestCase):
     """Test parser creation."""
 
-    def test_empty_create_parser(self):
+    def test_empty_create_parser(self, *args):
         """Test if a naked parser is created"""
         from collective.bbcodesnippets.parser import create_parser
 
@@ -16,12 +20,15 @@ class TestParserBasic(unittest.TestCase):
         self.assertIsInstance(parser, bbcode.Parser)
 
 
-class TestParserBasic(unittest.TestCase):
+@mock.patch(
+    "plone.api.portal.get_registry_record", new_callable=mock_get_registry_record
+)
+class TestParserBasic(TestCase):
     """Test parser creation."""
 
     layer = UNIT_TESTING
 
-    def test_non_empty_create_parser(self):
+    def test_non_empty_create_parser(self, *args):
         """Test if a naked parser is created"""
         from collective.bbcodesnippets.interfaces import IFormatterFactory
         from collective.bbcodesnippets.parser import create_parser

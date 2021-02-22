@@ -1,21 +1,32 @@
 from . import _
+from .interfaces import IFormatterFactory
+from operator import itemgetter
 from plone.app.registry.browser import controlpanel
-from zope import schema
-from zope.interface import Interface
-from zope.schema.vocabulary import SimpleTerm
-from zope.schema.vocabulary import SimpleVocabulary
-from zope.schema.interfaces import IVocabularyFactory
-from zope.interface import provider
+from plone.app.vocabularies.terms import TermWithDescription
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
+from zope import schema
+from zope.component import getUtilitiesFor
+from zope.interface import Interface
+from zope.interface import provider
+from zope.schema.interfaces import IVocabularyFactory
+from zope.schema.vocabulary import SimpleVocabulary
+
 
 @provider(IVocabularyFactory)
 def available_formatters_vocabulary_factory(context):
-    return SimpleVocabulary([SimpleTerm("foo", title=_("Foo"))])
+    terms = []
+    for name, factory in sorted(getUtilitiesFor(IFormatterFactory), key=itemgetter(0)):
+        if factory.__doc__:
+            terms.append(
+                TermWithDescription(name, name, name, description=factory.__doc__)
+            )
+    return SimpleVocabulary(terms)
 
 
 class IBBCodeSnippetsSettings(Interface):
     formatters = schema.List(
-        title=_("Active Formatters"),
+        title=_("Available Formatters"),
+        description=_("Selected formatters will be enabled in the portal."),
         value_type=schema.Choice(
             vocabulary="bbcodesnippets.available_formatters_vocabulary",
         ),
@@ -35,7 +46,8 @@ class BBCodeControlPanelForm(controlpanel.RegistryEditForm):
 
     def updateFields(self):
         super().updateFields()
-        self.fields['formatters'].widgetFactory = CheckBoxFieldWidget
+        self.fields["formatters"].widgetFactory = CheckBoxFieldWidget
+
 
 class BBCodeControlPanel(controlpanel.ControlPanelFormWrapper):
     form = BBCodeControlPanelForm

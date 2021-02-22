@@ -1,4 +1,6 @@
+from .controlpanel import IBBCodeSnippetsSettings
 from .interfaces import IFormatterFactory
+from plone import api
 from zope.component import getUtilitiesFor
 
 import bbcode
@@ -9,6 +11,9 @@ def _null_linker(url):
 
 
 def create_parser():
+    enabled = api.portal.get_registry_record(
+        "formatters", interface=IBBCodeSnippetsSettings
+    )
     parser = bbcode.Parser(
         install_defaults=False,
         escape_html=False,
@@ -17,6 +22,7 @@ def create_parser():
     )
     for name, factory in getUtilitiesFor(IFormatterFactory):
         __traceback_info__ = name
-        formatter, options = factory()
-        parser.add_formatter(name, formatter, **options)
+        if factory.__doc__ or name in enabled:
+            formatter, options = factory()
+            parser.add_formatter(name, formatter, **options)
     return parser

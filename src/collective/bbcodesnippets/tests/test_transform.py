@@ -1,9 +1,13 @@
+from .mocks import mock_get_registry_record
 from plone.testing.zca import UNIT_TESTING
+from unittest import mock
+from unittest import TestCase
 
-import unittest
 
-
-class TestTranformer(unittest.TestCase):
+@mock.patch(
+    "plone.api.portal.get_registry_record", new_callable=mock_get_registry_record
+)
+class TestTransformer(TestCase):
     """Test Transformer."""
 
     layer = UNIT_TESTING
@@ -40,16 +44,15 @@ class TestTranformer(unittest.TestCase):
 
         provideUtility(dummy_factory, name="dummy")
 
-    def test_no_html_xml__no_formatter_transform(self):
+    def test_no_html_xml__no_formatter_transform(self, *args):
         """Test if nothing is done w/o xml/html"""
-
         source = "[foo]"
         transformed = source
 
         self._do_transform(source)
         self.assertEqual(source, transformed)
 
-    def test_html_no_formatter(self):
+    def test_html_no_formatter(self, *args):
         """Test if nothing is done w/o formaters"""
 
         source = "<X>[dummy]</X>"
@@ -58,7 +61,7 @@ class TestTranformer(unittest.TestCase):
         self._do_transform(source)
         self.assertEqual(source, transformed)
 
-    def test_no_html_xml_with_formatter_transform(self):
+    def test_no_html_xml_with_formatter_transform(self, *args):
         """Test if nothing is done with formaters but on non-xml/html"""
 
         source = "[dummy]"
@@ -68,7 +71,7 @@ class TestTranformer(unittest.TestCase):
         self._do_transform(source)
         self.assertEqual(source, transformed)
 
-    def test_html_xml_with_formatter_transform(self):
+    def test_html_xml_with_formatter_transform(self, *args):
         """Test if nothing is done with formaters but on non-xml/html"""
 
         source = "<x>[dummy]</x>"
@@ -78,7 +81,7 @@ class TestTranformer(unittest.TestCase):
         result = self._do_transform(source)
         self.assertIn(transformed, result.serialize())
 
-    def test_html_with_tail(self):
+    def test_html_with_tail(self, *args):
         """Test if nothing is done with formaters but on non-xml/html"""
 
         source = "<p>1 [dummy] 2<br>3 [dummy] 4</p>"
@@ -88,7 +91,7 @@ class TestTranformer(unittest.TestCase):
         result = self._do_transform(source)
         self.assertIn(transformed, result.serialize())
 
-    def test_complex_html(self):
+    def test_complex_html(self, *args):
         """All should  be transformed."""
 
         source = '<div>[dummy]<article>1[dummy] 2<br>3[dummy] 4 <a href="">5 [dummy] 6</a>[dummy]</article><p>[dummy]</p>[dummy]</div>'
@@ -98,7 +101,7 @@ class TestTranformer(unittest.TestCase):
         result = self._do_transform(source)
         self.assertIn(transformed, result.serialize())
 
-    def test_deny_on_complex_html(self):
+    def test_deny_on_complex_html(self, *args):
         """Textarea should not be transformed."""
 
         source = '<div>[dummy]<textarea>1[dummy] 2<br>3[dummy] 4 <a href="">5 [dummy] 6</a>[dummy]</textarea><p>[dummy]</p>[dummy]</div>'
