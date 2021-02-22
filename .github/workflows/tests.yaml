@@ -1,10 +1,9 @@
 
-name: Build and test result
+name: Build and test
 
 on: [push]
 
 jobs:
-
   build:
     strategy:
       matrix:
