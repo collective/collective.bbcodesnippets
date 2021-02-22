@@ -23,6 +23,13 @@ class TestSetup(unittest.TestCase):
             self.installer.is_product_installed("collective.bbcodesnippets")
         )
 
+    def test_browserlayer(self):
+        """Test that ICollectiveBookmarksLayer is registered."""
+        from collective.bbcodesnippets.interfaces import IBBCodeSnippetsLayer
+        from plone.browserlayer import utils
+
+        self.assertIn(IBBCodeSnippetsLayer, utils.registered_layers())
+
 
 class TestUninstall(unittest.TestCase):
     """Test that collective.bbcodesnippets is properly uninstalled."""
@@ -40,3 +47,10 @@ class TestUninstall(unittest.TestCase):
     def test_product_uninstalled(self):
         """Test if collective.bbcodesnippets is cleanly uninstalled."""
         self.assertFalse(self.installer.isProductInstalled("collective.bbcodesnippets"))
+
+    def test_browserlayer_removed(self):
+        """Test that ICollectiveBookmarksLayer is removed."""
+        from collective.bbcodesnippets.interfaces import IBBCodeSnippetsLayer
+        from plone.browserlayer import utils
+
+        self.assertNotIn(IBBCodeSnippetsLayer, utils.registered_layers())

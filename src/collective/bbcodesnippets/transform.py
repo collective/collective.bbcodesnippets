@@ -7,8 +7,8 @@ from zope.interface import implementer
 from zope.interface import Interface
 
 
-@implements(ITransform)
-@adapts(Interface, IBBCodeSnippetsLayer)
+@implementer(ITransform)
+@adapter(Interface, IBBCodeSnippetsLayer)
 class BBCodeSnippetsTransform(object):
 
     # after diazo (plone.app.theming) which is 8850
@@ -20,13 +20,15 @@ class BBCodeSnippetsTransform(object):
 
     def parseTree(self, result):
         contentType = self.request.response.getHeader("Content-Type")
-        if contentType is None or not contentType.startswith("text/html"):
-            return None
-
-        if self.request.response.getHeader("Content-Encoding") in (
-            "zip",
-            "deflate",
-            "compress",
+        if (
+            contentType is None
+            or not contentType.startswith("text/html")
+            or self.request.response.getHeader("Content-Encoding")
+            in (
+                "zip",
+                "deflate",
+                "compress",
+            )
         ):
             return None
 
@@ -35,13 +37,13 @@ class BBCodeSnippetsTransform(object):
         except (AttributeError, TypeError, etree.ParseError):
             return None
 
+    def denylist(self):
+        return ["textarea"]
+
     def transformBytes(self, result, encoding):
         try:
             result = result.decode(encoding)
         except UnicodeDecodeError:
-            # This is probably a file or an image
-            # FIXME probably we do not event want to apply
-            # this transform for files and images
             return None
         return self.transformIterable([result], encoding)
 
@@ -51,15 +53,15 @@ class BBCodeSnippetsTransform(object):
     def transformUnicode(self, result, encoding):
         return self.transformIterable([result], encoding)
 
-    def create_parser(self, root):
-        self.parser = create_parser()
-
     def transformIterable(self, result, encoding):
+        parser = create_parser()
         result = self.parseTree(result)
         if result is None:
             return None
-
+        denylist = self.denylist()
         for el in etree.iterwalk(result.tree):
-            pass
-
+            if el.text and el.tag.lower() not in denylist:
+                el.text = parser.transform(el.text)
+            if el.tail and el.getParent().tag.lower() not in denylist:
+                el.tail = parser.transform(el.tail)
         return result
