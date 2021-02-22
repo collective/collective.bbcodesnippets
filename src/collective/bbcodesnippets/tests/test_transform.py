@@ -1,8 +1,10 @@
 from .mocks import mock_get_registry_record
 from plone.testing.zca import UNIT_TESTING
-from unittest import mock
 from unittest import TestCase
-
+try:
+    from unittest import mock
+except ImportError:
+    import mock
 
 @mock.patch(
     "plone.api.portal.get_registry_record", new_callable=mock_get_registry_record
