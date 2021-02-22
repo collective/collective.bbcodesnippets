@@ -73,8 +73,18 @@ class TestTranformer(unittest.TestCase):
         """Test if nothing is done with formaters but on non-xml/html"""
 
         source = "<x>[dummy]</x>"
-        transformed = "<x>DUMMY</x>"
+        transformed = b"<x>DUMMY</x>"
 
         self._register_formatter()
         result = self._do_transform(source)
-        self.assertIn(transformed.encode('utf8'), result.serialize())
+        self.assertIn(transformed, result.serialize())
+
+    def test_html_with_tail(self):
+        """Test if nothing is done with formaters but on non-xml/html"""
+
+        source = "<p>1 [dummy] 2<br>3 [dummy] 4</p>"
+        transformed = b"<p>1 DUMMY 2<br>3 DUMMY 4</p>"
+
+        self._register_formatter()
+        result = self._do_transform(source)
+        self.assertIn(transformed, result.serialize())

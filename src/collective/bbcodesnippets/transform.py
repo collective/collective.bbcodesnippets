@@ -63,6 +63,6 @@ class BBCodeSnippetsTransform(object):
         for action, el in etree.iterwalk(result.tree):
             if el.text and el.tag.lower() not in denylist:
                 el.text = parser.format(el.text)
-            if el.tail and el.getParent().tag.lower() not in denylist:
+            if el.tail and el.getparent().tag.lower() not in denylist:
                 el.tail = parser.format(el.tail)
         return result
