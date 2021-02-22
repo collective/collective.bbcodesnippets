@@ -1,3 +1,4 @@
+from re import L
 from .interfaces import IBBCodeSnippetsLayer
 from .parser import create_parser
 from lxml import etree
@@ -60,9 +61,16 @@ class BBCodeSnippetsTransform(object):
             return None
         parser = create_parser()
         denylist = self.denylist()
-        for action, el in etree.iterwalk(result.tree):
-            if el.text and el.tag.lower() not in denylist:
+
+        def _process_node(el):
+            if el.text:
                 el.text = parser.format(el.text)
-            if el.tail and el.getparent().tag.lower() not in denylist:
+            if el.tail:
                 el.tail = parser.format(el.tail)
+            for cel in el.getchildren():
+                if cel.tag in denylist:
+                    continue
+                _process_node(cel)
+
+        _process_node(result.tree.getroot())
         return result

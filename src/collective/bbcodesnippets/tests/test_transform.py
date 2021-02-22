@@ -88,3 +88,24 @@ class TestTranformer(unittest.TestCase):
         self._register_formatter()
         result = self._do_transform(source)
         self.assertIn(transformed, result.serialize())
+
+    def test_complex_html(self):
+        """All should  be transformed."""
+
+        source = '<div>[dummy]<article>1[dummy] 2<br>3[dummy] 4 <a href="">5 [dummy] 6</a>[dummy]</article><p>[dummy]</p>[dummy]</div>'
+        transformed = b'<div>DUMMY<article>1DUMMY 2<br>3DUMMY 4 <a href="">5 DUMMY 6</a>DUMMY</article><p>DUMMY</p>DUMMY</div>'
+
+        self._register_formatter()
+        result = self._do_transform(source)
+        self.assertIn(transformed, result.serialize())
+
+    def test_deny_on_complex_html(self):
+        """Textarea should not be transformed."""
+
+        source = '<div>[dummy]<textarea>1[dummy] 2<br>3[dummy] 4 <a href="">5 [dummy] 6</a>[dummy]</textarea><p>[dummy]</p>[dummy]</div>'
+        transformed = b'<div>DUMMY<textarea>1[dummy] 2<br>3[dummy] 4 <a href="">5 [dummy] 6</a>[dummy]</textarea><p>DUMMY</p>DUMMY</div>'
+
+        self._register_formatter()
+        result = self._do_transform(source)
+        self.assertIn(transformed, result.serialize())
+
