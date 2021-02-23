@@ -1,6 +1,7 @@
 from .mocks import mock_get_registry_record
 from plone.testing.zca import UNIT_TESTING
 from unittest import TestCase
+from lxml import etree
 try:
     from unittest import mock
 except ImportError:
@@ -34,7 +35,7 @@ class TestTransformer(TestCase):
 
     def _register_formatter(self):
         def dummy_formatter(name, value, options, parent, context):
-            return "DUMMY"
+            return "DUM<hr/>MY"
 
         from collective.bbcodesnippets.interfaces import IFormatterFactory
         from zope.component import provideUtility
@@ -74,41 +75,41 @@ class TestTransformer(TestCase):
         self.assertEqual(source, transformed)
 
     def test_html_xml_with_formatter_transform(self, *args):
-        """Test if nothing is done with formaters but on non-xml/html"""
+        """Test if nothing is done with formatters but on non-xml/html"""
 
         source = "<x>[dummy]</x>"
-        transformed = b"<x>DUMMY</x>"
+        transformed = b"<x>DUM<hr/>MY</x>"
 
         self._register_formatter()
         result = self._do_transform(source)
-        self.assertIn(transformed, result.serialize())
+        self.assertEqual(transformed, etree.tostring(result.tree.getroot()[0][0]))
 
     def test_html_with_tail(self, *args):
         """Test if nothing is done with formaters but on non-xml/html"""
 
         source = "<p>1 [dummy] 2<br>3 [dummy] 4</p>"
-        transformed = b"<p>1 DUMMY 2<br>3 DUMMY 4</p>"
+        transformed = b"<p>1 DUM<hr/>MY 2<br/>3 DUM<hr/>MY 4</p>"
 
         self._register_formatter()
         result = self._do_transform(source)
-        self.assertIn(transformed, result.serialize())
+        self.assertEqual(transformed, etree.tostring(result.tree.getroot()[0][0]))
 
     def test_complex_html(self, *args):
         """All should  be transformed."""
 
         source = '<div>[dummy]<article>1[dummy] 2<br>3[dummy] 4 <a href="">5 [dummy] 6</a>[dummy]</article><p>[dummy]</p>[dummy]</div>'
-        transformed = b'<div>DUMMY<article>1DUMMY 2<br>3DUMMY 4 <a href="">5 DUMMY 6</a>DUMMY</article><p>DUMMY</p>DUMMY</div>'
+        transformed = b'<div>DUM<hr/>MY<article>1DUM<hr/>MY 2<br/>3DUM<hr/>MY 4 <a href="">5 DUM<hr/>MY 6</a>DUM<hr/>MY</article><p>DUM<hr/>MY</p>DUM<hr/>MY</div>'
 
         self._register_formatter()
         result = self._do_transform(source)
-        self.assertIn(transformed, result.serialize())
+        self.assertEqual(transformed, etree.tostring(result.tree.getroot()[0][0]))
 
     def test_deny_on_complex_html(self, *args):
         """Textarea should not be transformed."""
 
         source = '<div>[dummy]<textarea>1[dummy] 2<br>3[dummy] 4 <a href="">5 [dummy] 6</a>[dummy]</textarea><p>[dummy]</p>[dummy]</div>'
-        transformed = b'<div>DUMMY<textarea>1[dummy] 2<br>3[dummy] 4 <a href="">5 [dummy] 6</a>[dummy]</textarea><p>DUMMY</p>DUMMY</div>'
+        transformed = b'<div>DUM<hr/>MY<textarea>1[dummy] 2<br/>3[dummy] 4 <a href="">5 [dummy] 6</a>[dummy]</textarea><p>DUM<hr/>MY</p>DUM<hr/>MY</div>'
 
         self._register_formatter()
         result = self._do_transform(source)
-        self.assertIn(transformed, result.serialize())
+        self.assertEqual(transformed, etree.tostring(result.tree.getroot()[0][0]))

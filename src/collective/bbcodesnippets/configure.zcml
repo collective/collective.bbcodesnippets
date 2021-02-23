@@ -35,7 +35,7 @@
       name="collective.bbcodesnippets-hiddenprofiles"
       />
 
-<!-- Controlpanel -->
+  <!-- Controlpanel -->
   <browser:page
       name="bbcodesnippets-controlpanel"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
@@ -46,5 +46,10 @@
   <utility
       component=".controlpanel.available_formatters_vocabulary_factory"
       name="bbcodesnippets.available_formatters_vocabulary"
-  />
+   />
+  <!-- transformer -->
+  <adapter
+      name="collective.bbcodesnippets.transform"
+      factory=".transform.BBCodeSnippetsTransform"
+  />  
 </configure>

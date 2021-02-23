@@ -8,32 +8,36 @@ from zope.component import adapter
 from zope.interface import implementer
 from zope.interface import Interface
 
-
+try: 
+    from html import escape
+except ImportError:
+    from cgi import escape
+            
 @implementer(ITransform)
 @adapter(Interface, IBBCodeSnippetsLayer)
 class BBCodeSnippetsTransform(object):
 
     # after diazo (plone.app.theming) which is 8850
-    order = 9000
+    order = 8960
 
     def __init__(self, published, request):
         self.published = published
-        self.request = request
-
-    def parseTree(self, result):
-        contentType = self.request.response.getHeader("Content-Type")
-        if (
-            contentType is None
-            or not contentType.startswith("text/html")
-            or self.request.response.getHeader("Content-Encoding")
+        contentType = request.response.getHeader("Content-Type")
+        self.valid = (
+            contentType is not None
+            and contentType.startswith("text/html")
+            and not request.response.getHeader("Content-Encoding")
             in (
                 "zip",
                 "deflate",
                 "compress",
             )
-        ):
-            return None
+        )
+        if self.valid:
+            self.parser = create_parser()
 
+
+    def parse_tree(self, result):
         try:
             return getHTMLSerializer(result, pretty_print=False)
         except (AttributeError, TypeError, etree.ParseError):
@@ -43,6 +47,8 @@ class BBCodeSnippetsTransform(object):
         return ["textarea"]
 
     def transformBytes(self, result, encoding):
+        if not self.valid:
+            return None
         try:
             result = result.decode(encoding)
         except UnicodeDecodeError:
@@ -50,27 +56,73 @@ class BBCodeSnippetsTransform(object):
         return self.transformIterable([result], encoding)
 
     def transformString(self, result, encoding):
+        if not self.valid:
+            return None
         return self.transformIterable([result], encoding)
 
     def transformUnicode(self, result, encoding):
+        if not self.valid:
+            return None
         return self.transformIterable([result], encoding)
 
     def transformIterable(self, result, encoding):
-        result = self.parseTree(result)
+        if not self.valid:
+            return None
+        result = self.parse_tree(result)
         if result is None:
             return None
-        parser = create_parser()
+        
         denylist = self.denylist()
+        parser = self.parser
+
+        def _handle_text(el):
+            # escape all literal tags in here and format with bbcode
+            formatted = parser.format(escape(el.text))
+            # wrap in element, now we have the new subtree
+            sub = etree.fromstring("<bbcs>{}</bbcs>".format(formatted))
+            # a text is replaced by a new text followed by new children
+            # the new children got all inserted as first, shifting existing ones back
+            # any new tail is already the tail of the last new child, so no action needed here.
+            el.text = sub.text
+            last_subel = None
+            for deltaindex, subel in enumerate(sub.iterchildren()):
+                el.insert(deltaindex, subel)                    
+                last_subel = subel
+            return last_subel                
+
+        def _handle_tail(el, last_sub):
+            # escape all literal tags in here and format with bbcode
+            formatted = parser.format(escape(el.tail))
+            # wrap in element, now we have the new subtree
+            new_tail_structure = etree.fromstring("<bbcs>{}</bbcs>".format(formatted))
+
+            # A new "tail" structure may have a text and 1..n children, 
+            # but never has a tail (this is how lxml parses it, its on the last child).
+
+            # The new text is the new tail
+            el.tail = new_tail_structure.text
+            
+            # Children are just appended behind el
+            parent = el.getparent()
+            baseindex = parent.index(el) + 1
+            current = el
+            for deltaindex, child in enumerate(new_tail_structure.iterchildren()):
+                parent.insert(baseindex + deltaindex, child)
+
 
         def _process_node(el):
-            if el.text:
-                el.text = parser.format(el.text)
-            if el.tail:
-                el.tail = parser.format(el.tail)
+            # process nodes depth first to avoid parsing just generated nodes.
             for cel in el.getchildren():
                 if cel.tag in denylist:
                     continue
                 _process_node(cel)
+            
+            if el.text and el.text.strip():
+                last_sub =_handle_text(el)
+            else:
+                last_sub = None
+            if el.tail and el.tail.strip():
+                _handle_tail(el, last_sub)
 
         _process_node(result.tree.getroot())
         return result
