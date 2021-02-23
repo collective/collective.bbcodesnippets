@@ -41,6 +41,10 @@ Then there is a conrol-panel to control the allowed BBcodes.
 Source Code
 ===========
 
+.. image:: https://github.com/collective/collective.bbcodesnippets/actions/workflows/tests.yaml/badge.svg
+    :target: https://github.com/collective/collective.bbcodesnippets/actions/workflows/tests.yaml
+    :alt: Build and Test
+
 The sources are in a GIT DVCS with its main branches at `github <http://github.com/collective/collective.bbcodesnippets>`_.
 
 We'd be happy to see many forks and pull-requests to make collective.bbcodesnippets even better.
