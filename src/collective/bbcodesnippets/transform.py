@@ -7,11 +7,15 @@ from repoze.xmliter.utils import getHTMLSerializer
 from zope.component import adapter
 from zope.interface import implementer
 from zope.interface import Interface
+import logging 
 
 try: 
     from html import escape
 except ImportError:
     from cgi import escape
+
+logger = logging.getLogger(__name__)
+
             
 @implementer(ITransform)
 @adapter(Interface, IBBCodeSnippetsLayer)
@@ -77,9 +81,17 @@ class BBCodeSnippetsTransform(object):
 
         def _handle_text(el):
             # escape all literal tags in here and format with bbcode
-            formatted = parser.format(escape(el.text))
+            try:
+                formatted = parser.format(escape(el.text))
+            except Exception:
+                logger.exception("BBCode format failed.")
+                return el
             # wrap in element, now we have the new subtree
-            sub = etree.fromstring("<bbcs>{}</bbcs>".format(formatted))
+            try:
+                sub = etree.fromstring("<bbcs>{}</bbcs>".format(formatted))
+            except Exception:
+                logger.exception("BBCode result is not valid xml failed.")
+                return el
             # a text is replaced by a new text followed by new children
             # the new children got all inserted as first, shifting existing ones back
             # any new tail is already the tail of the last new child, so no action needed here.
@@ -92,9 +104,17 @@ class BBCodeSnippetsTransform(object):
 
         def _handle_tail(el, last_sub):
             # escape all literal tags in here and format with bbcode
-            formatted = parser.format(escape(el.tail))
+            try:
+                formatted = parser.format(escape(el.tail))
+            except Exception:
+                logger.exception("BBCode format failed.")
+                return
             # wrap in element, now we have the new subtree
-            new_tail_structure = etree.fromstring("<bbcs>{}</bbcs>".format(formatted))
+            try:
+                new_tail_structure = etree.fromstring("<bbcs>{}</bbcs>".format(formatted))
+            except Exception:
+                logger.exception("BBCode result is not valid xml, failed.")
+                return 
 
             # A new "tail" structure may have a text and 1..n children, 
             # but never has a tail (this is how lxml parses it, its on the last child).

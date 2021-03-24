@@ -84,13 +84,13 @@ def sup_factory():
 @provider(IFormatterFactory)
 def hr_factory():
     """Horizontal ruler: [hr]"""
-    return make_simple_formatter("hr", "<hr>"), {"standalone": True}
+    return make_simple_formatter("hr", "<hr />"), {"standalone": True}
 
 
 @provider(IFormatterFactory)
 def br_factory():
     """Line break: [br]"""
-    return make_simple_formatter("br", "<br>"), {"standalone": True}
+    return make_simple_formatter("br", "<br />"), {"standalone": True}
 
 
 @provider(IFormatterFactory)
