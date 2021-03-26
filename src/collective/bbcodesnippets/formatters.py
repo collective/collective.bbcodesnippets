@@ -196,9 +196,10 @@ def url_factory():
 
     def _render_url(name, value, options, parent, context):
         if options and "url" in options:
+            href = options["url"]
             # Option values are not escaped for HTML output.
             for find, repl in bbcode.Parser.REPLACE_ESCAPE:
-                data = data.replace(find, repl)
+                value = value.replace(find, repl)
         else:
             href = value
         # Completely ignore javascript: and data: "links".

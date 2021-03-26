@@ -16,9 +16,7 @@ from zope.schema.vocabulary import SimpleVocabulary
 def available_formatters_vocabulary_factory(context):
     terms = []
     for name, factory in sorted(getUtilitiesFor(IFormatterFactory), key=itemgetter(0)):
-        terms.append(
-            TermWithDescription(name, name, name, description=factory.__doc__)
-        )
+        terms.append(TermWithDescription(name, name, name, description=factory.__doc__))
     return SimpleVocabulary(terms)
 
 
