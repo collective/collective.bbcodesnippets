@@ -16,6 +16,8 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
+DENYLIST = ["textarea", "script", "link"]
+
 
 @implementer(ITransform)
 @adapter(Interface, IBBCodeSnippetsLayer)
@@ -47,7 +49,7 @@ class BBCodeSnippetsTransform(object):
             return None
 
     def denylist(self):
-        return ["textarea"]
+        return DENYLIST
 
     def transformBytes(self, result, encoding):
         if not self.valid:
