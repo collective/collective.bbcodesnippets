@@ -49,10 +49,10 @@
       name="code"
       component=".formatters.code_factory"
   />
-  <utility
+  <!-- <utility
       name="color"
       component=".formatters.color_factory"
-  />
+  /> -->
   <utility
       name="center"
       component=".formatters.center_factory"
