@@ -52,6 +52,17 @@
       name="collective.bbcodesnippets.transform"
       factory=".transform.BBCodeSnippetsTransform"
   />  
+  <!-- Toolbar Menu -->
+  <adapter for="* *"
+      name="plone.contentmenu.bbcodesnippets_menu_item"
+      factory=".menu.BBCodeSnippetesMainMenuItem"
+      provides="plone.app.contentmenu.interfaces.IContentMenuItem" />
+
+  <browser:menu
+      id="bbcodesnippets_menu"
+      title="BBCode Snippets"
+      class=".menu.BBCodeSnippetesMenu"
+  />
   <!-- Demo -->
   <browser:page
       name="bbcodesnippets-demo"

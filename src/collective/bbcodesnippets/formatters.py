@@ -4,14 +4,15 @@ from zope.interface import provider
 import bbcode
 import re
 
-class copy_snippet(object):
 
+class copy_snippet(object):
     def __init__(self, snippet):
         self.__bbcode_copy_snippet__ = snippet
 
     def __call__(self, func):
         func.__bbcode_copy_snippet__ = self.__bbcode_copy_snippet__
         return func
+
 
 # parts of this code are inspired by and partly taken from
 # https://github.com/dcwatson/bbcode/blob/master/bbcode.py
@@ -132,11 +133,13 @@ def br_factory():
 
 
 @provider(IFormatterFactory)
-@copy_snippet("""
+@copy_snippet(
+    """
 [list]
     [*] item
 [/list]
-""")
+"""
+)
 def list_factory():
     """List with bullets or numbers. Use '*' for bullet points or for numbers one out of '1', '01, 'a', 'A', 'i' or 'I'.
     Bullet points: [list][*] item[/list]
