@@ -4,6 +4,14 @@ from zope.interface import provider
 import bbcode
 import re
 
+class copy_snippet(object):
+
+    def __init__(self, snippet):
+        self.__bbcode_copy_snippet__ = snippet
+
+    def __call__(self, func):
+        func.__bbcode_copy_snippet__ = self.__bbcode_copy_snippet__
+        return func
 
 # parts of this code are inspired by and partly taken from
 # https://github.com/dcwatson/bbcode/blob/master/bbcode.py
@@ -46,6 +54,7 @@ def make_simple_formatter(tag_name, format_string, **kwargs):
 
 
 @provider(IFormatterFactory)
+@copy_snippet("[b][/b]")
 def b_factory():
     """Bold or strong text: <pre>A [b]bold[/b] text.</pre><br />
     Example:<br />
@@ -55,6 +64,7 @@ def b_factory():
 
 
 @provider(IFormatterFactory)
+@copy_snippet("[i][/i]")
 def i_factory():
     """Italic or emphasised text: <pre>An [i]italic/emphasised[/i] text.</pre><br />
     Example:<br />
@@ -64,6 +74,7 @@ def i_factory():
 
 
 @provider(IFormatterFactory)
+@copy_snippet("[u][/u]")
 def u_factory():
     """Underlined or unarticulated text: <pre>An [u]underlined[u] text.</pre><br />
     Example:<br />
@@ -73,12 +84,14 @@ def u_factory():
 
 
 @provider(IFormatterFactory)
+@copy_snippet("[s][/s]")
 def s_factory():
     """Strike through or deleted text: [s]test[/s]"""
     return make_simple_formatter("s", "<del>%(value)s</del>"), {}
 
 
 @provider(IFormatterFactory)
+@copy_snippet("[sub][/sub]")
 def sub_factory():
     """Subscript text: <pre>H[sub]2[/sub]O</pre><br />
     Example:<br />
@@ -88,6 +101,7 @@ def sub_factory():
 
 
 @provider(IFormatterFactory)
+@copy_snippet("[sup][/sup]")
 def sup_factory():
     """Superscript text: <pre>r[sup]2[/sup]</pre><br />
     Example:<br />
@@ -97,6 +111,7 @@ def sup_factory():
 
 
 @provider(IFormatterFactory)
+@copy_snippet("[hr]")
 def hr_factory():
     """Horizontal ruler: <pre>Above ruler[hr]Below ruler</pre><br />
     Example:<br />
@@ -107,6 +122,7 @@ def hr_factory():
 
 
 @provider(IFormatterFactory)
+@copy_snippet("[br]")
 def br_factory():
     """Line break in text: <pre>A line[br]break in the text.</pre><br />
     Example:<br />
@@ -116,6 +132,11 @@ def br_factory():
 
 
 @provider(IFormatterFactory)
+@copy_snippet("""
+[list]
+    [*] item
+[/list]
+""")
 def list_factory():
     """List with bullets or numbers. Use '*' for bullet points or for numbers one out of '1', '01, 'a', 'A', 'i' or 'I'.
     Bullet points: [list][*] item[/list]
@@ -165,6 +186,7 @@ def list_item_factory():
 
 
 @provider(IFormatterFactory)
+@copy_snippet("[quote][/quote]")
 def quote_factory():
     return make_simple_formatter("quote", "<blockquote>%(value)s</blockquote>"), {
         "strip": True,
@@ -173,6 +195,7 @@ def quote_factory():
 
 
 @provider(IFormatterFactory)
+@copy_snippet("[code][/code]")
 def code_factory():
     """Code text: <pre>Some random Code: [code]print("Hello World")[/code]</pre><br />
     Example:<br />
@@ -188,6 +211,7 @@ def code_factory():
 
 
 @provider(IFormatterFactory)
+@copy_snippet("[color=red][/color]")
 def color_factory():
     def _render_color(name, value, options, parent, context):
         if "color" in options:
@@ -207,12 +231,12 @@ def color_factory():
 
 
 @provider(IFormatterFactory)
+@copy_snippet("[center][/center]")
 def center_factory():
     """Centered text: <pre>[center]centered text[/center]</pre><br />
     Example:<br />
     [center]centered text[/center]
     """
-
     return (
         make_simple_formatter(
             "center", '<div style="text-align:center;">%(value)s</div>'
@@ -222,6 +246,7 @@ def center_factory():
 
 
 @provider(IFormatterFactory)
+@copy_snippet("[url=https://plone.org]Plone[/url]")
 def url_factory():
     """A hyper link in the text: <pre>Welcome to [url=www.plone.org]Plone[/url]!</pre><br />
     Example:<br />

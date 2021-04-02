@@ -7,7 +7,7 @@
   <metal:content-core fill-slot="content-core">
     <metal:block define-macro="content-core">
       <article tal:repeat="docssnippet python:view.docsnippets()"> 
-        <h2>${python:docssnippet['name']}</h2>
+        <h2 tal:define="snippet python:docssnippet['snippet']">${python:docssnippet['name']} <a class="small" title="Copy ${snippet} to clipboard" href="javascript:navigator.clipboard.writeText('${snippet}');">Copy</a></h2>
         <p class="small">[${python:'X' if docssnippet['enabled'] else '-'}] enabled</p>
         <tal tal:replace="structure python:docssnippet['demo']" >Demo</tal>
       </article>

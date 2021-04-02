@@ -12,6 +12,7 @@ class DemoView(BrowserView):
                 continue
             yield {
                 "name": name,
+                "snippet": factory.__bbcode_copy_snippet__,
                 "demo": factory.__doc__,
                 "enabled": name in enabled,
             }
