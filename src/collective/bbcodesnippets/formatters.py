@@ -47,19 +47,28 @@ def make_simple_formatter(tag_name, format_string, **kwargs):
 
 @provider(IFormatterFactory)
 def b_factory():
-    """Bold or strong text: [b]test[/b]"""
+    """Bold or strong text: <pre>A [b]bold[/b] text.</pre><br />
+    Example:<br />
+    A [b]bold[/b] text.
+    """
     return make_simple_formatter("b", "<strong>%(value)s</strong>"), {}
 
 
 @provider(IFormatterFactory)
 def i_factory():
-    """Italic or emphasised: [i]test[/i]"""
+    """Italic or emphasised text: <pre>An [i]italic/emphasised[/i] text.</pre><br />
+    Example:<br />
+    An [i]italic/emphasised[/i] text.
+    """
     return make_simple_formatter("i", "<em>%(value)s</em>"), {}
 
 
 @provider(IFormatterFactory)
 def u_factory():
-    """Underlined or unarticulated text: [u]test[/u]"""
+    """Underlined or unarticulated text: <pre>An [u]underlined[u] text.</pre><br />
+    Example:<br />
+    An [u]underlined[/u] text.
+    """
     return make_simple_formatter("u", "<u>%(value)s</u>"), {}
 
 
@@ -71,25 +80,38 @@ def s_factory():
 
 @provider(IFormatterFactory)
 def sub_factory():
-    """Subscript text: [sub]test[/sub]"""
+    """Subscript text: <pre>H[sub]2[/sub]O</pre><br />
+    Example:<br />
+    H[sub]2[/sub]O
+    """
     return make_simple_formatter("sub", "<sub>%(value)s</sub>"), {}
 
 
 @provider(IFormatterFactory)
 def sup_factory():
-    """Superscript text: [sup]test[/sup]"""
+    """Superscript text: <pre>r[sup]2[/sup]</pre><br />
+    Example:<br />
+    r[sup]2[/sup]
+    """
     return make_simple_formatter("sup", "<sup>%(value)s</sup>"), {}
 
 
 @provider(IFormatterFactory)
 def hr_factory():
-    """Horizontal ruler: [hr]"""
+    """Horizontal ruler: <pre>Above ruler[hr]Below ruler</pre><br />
+    Example:<br />
+
+    Above ruler[hr]Below ruler
+    """
     return make_simple_formatter("hr", "<hr />"), {"standalone": True}
 
 
 @provider(IFormatterFactory)
 def br_factory():
-    """Line break: [br]"""
+    """Line break in text: <pre>A line[br]break in the text.</pre><br />
+    Example:<br />
+    A line[br]break in the text.
+    """
     return make_simple_formatter("br", "<br />"), {"standalone": True}
 
 
@@ -152,7 +174,12 @@ def quote_factory():
 
 @provider(IFormatterFactory)
 def code_factory():
-    return make_simple_formatter("code", "<blockquote>%(value)s</blockquote>"), {
+    """Code text: <pre>Some random Code: [code]print("Hello World")[/code]</pre><br />
+    Example:<br />
+    Some random Code: [code]print("Hello World")[/code]
+    """
+
+    return make_simple_formatter("code", "<code>%(value)s</code>"), {
         "render_embedded": False,
         "transform_newlines": False,
         "swallow_trailing_newline": True,
@@ -181,7 +208,11 @@ def color_factory():
 
 @provider(IFormatterFactory)
 def center_factory():
-    """Centered text: [center]test[/center]"""
+    """Centered text: <pre>[center]centered text[/center]</pre><br />
+    Example:<br />
+    [center]centered text[/center]
+    """
+
     return (
         make_simple_formatter(
             "center", '<div style="text-align:center;">%(value)s</div>'
@@ -192,7 +223,10 @@ def center_factory():
 
 @provider(IFormatterFactory)
 def url_factory():
-    """Link a text: [url=www.plone.org]Plone[/url]"""
+    """A hyper link in the text: <pre>Welcome to [url=www.plone.org]Plone[/url]!</pre><br />
+    Example:<br />
+    Welcome to [url=www.plone.org]Plone[/url]!
+    """
 
     def _render_url(name, value, options, parent, context):
         if options and "url" in options:

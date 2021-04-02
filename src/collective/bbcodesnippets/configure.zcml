@@ -52,4 +52,13 @@
       name="collective.bbcodesnippets.transform"
       factory=".transform.BBCodeSnippetsTransform"
   />  
+  <!-- Demo -->
+  <browser:page
+      name="bbcodesnippets-demo"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      permission="plone.app.controlpanel.Markup"
+      class=".demo.DemoView"
+      template="demo.pt"
+      layer=".interfaces.IBBCodeSnippetsLayer"
+      />
 </configure>

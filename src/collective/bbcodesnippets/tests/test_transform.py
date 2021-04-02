@@ -1,7 +1,8 @@
 from .mocks import mock_get_registry_record
+from lxml import etree
 from plone.testing.zca import UNIT_TESTING
 from unittest import TestCase
-from lxml import etree
+
 
 try:
     from unittest import mock

@@ -7,7 +7,9 @@ from repoze.xmliter.utils import getHTMLSerializer
 from zope.component import adapter
 from zope.interface import implementer
 from zope.interface import Interface
+
 import logging
+
 
 try:
     from html import escape
@@ -16,7 +18,7 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
-DENYLIST = ["textarea", "script", "link"]
+DENYLIST = ["textarea", "script", "link", "pre"]
 
 
 @implementer(ITransform)

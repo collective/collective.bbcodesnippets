@@ -14,6 +14,10 @@
       component=".formatters.u_factory"
   />
   <utility
+      name="s"
+      component=".formatters.s_factory"
+  />
+  <utility
       name="sub"
       component=".formatters.sub_factory"
   />
