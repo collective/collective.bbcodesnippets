@@ -12,6 +12,7 @@
 
   <include file="formatters.zcml" />
 
+  <!-- Controlpanel -->
   <genericsetup:registerProfile
       name="default"
       title="BBCode Snippets"
@@ -35,6 +36,7 @@
       name="collective.bbcodesnippets-hiddenprofiles"
       />
 
+  
   <!-- Controlpanel -->
   <browser:page
       name="bbcodesnippets-controlpanel"
@@ -47,11 +49,13 @@
       component=".controlpanel.available_formatters_vocabulary_factory"
       name="bbcodesnippets.available_formatters_vocabulary"
    />
+  
   <!-- transformer -->
   <adapter
       name="collective.bbcodesnippets.transform"
       factory=".transform.BBCodeSnippetsTransform"
   />  
+  
   <!-- Toolbar Menu -->
   <adapter for="* *"
       name="plone.contentmenu.bbcodesnippets_menu_item"
@@ -63,6 +67,24 @@
       title="BBCode Snippets"
       class=".menu.BBCodeSnippetesMenu"
   />
+  
+  <!-- Restapi -->
+  <plone:service
+    method="GET"
+    for="zope.interface.Interface"
+    layer=".interfaces.IBBCodeSnippetsLayer"
+    factory=".restapi.EnabledSnippetsGet"
+    name="@bbcodesnippets_enabled"
+    permission="zope2.View"
+    />
+
+  <!-- Publish static files -->
+  <plone:static
+      name="collective.bbcodesnippets"
+      type="plone"
+      directory="static"
+      />
+      
   <!-- Demo -->
   <browser:page
       name="bbcodesnippets-demo"
@@ -70,6 +92,5 @@
       permission="plone.app.controlpanel.Markup"
       class=".demo.DemoView"
       template="demo.pt"
-      layer=".interfaces.IBBCodeSnippetsLayer"
       />
 </configure>
