@@ -3,4 +3,26 @@
   <records interface="collective.bbcodesnippets.controlpanel.IBBCodeSnippetsSettings"
            prefix="bbcodesnippets"
   />
+
+  <records prefix="plone.resources/collective-bbcodesnippets"
+           interface='Products.CMFPlone.interfaces.IResourceRegistry'>
+      <value key="js">++plone++collective.bbcodesnippets/collective.bbcodesnippets.js</value>
+  </records>
+
+  <records prefix="plone.bundles/collective-bbcodesnippets-app"
+           interface="Products.CMFPlone.interfaces.IBundleRegistry">
+    <value key="resources">
+      <element>collective-bbcodesnippets</element>
+    </value>
+    <value key="last_compilation">2020-08-19 12:53:00</value>
+    <value key="jscompilation">++plone++collective.bbcodesnippets/collective.bbcodesnippets.js</value>
+    <value key="csscompilation">++plone++collective.bbcodesnippets/collective.bbcodesnippets.css</value>
+    <value key="develop_javascript">False</value>
+    <value key="develop_css">False</value>
+    <value key="merge_with"></value>
+    <value key="resources"></value>
+    <value key="compile">False</value>
+    <value key="enabled">True</value>
+    <value key="load_defer">True</value>
+  </records>  
 </registry>
