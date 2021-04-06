@@ -57,7 +57,7 @@
   />  
   
   <!-- Toolbar Menu -->
-  <adapter for="* *"
+  <adapter for="* .interfaces.IBBCodeSnippetsLayer"
       name="plone.contentmenu.bbcodesnippets_menu_item"
       factory=".menu.BBCodeSnippetesMainMenuItem"
       provides="plone.app.contentmenu.interfaces.IContentMenuItem" />
