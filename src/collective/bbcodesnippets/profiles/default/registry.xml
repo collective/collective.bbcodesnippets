@@ -1,16 +1,15 @@
 <?xml version="1.0"?>
 <registry>
   <records interface="collective.bbcodesnippets.controlpanel.IBBCodeSnippetsSettings"
-           prefix="bbcodesnippets"
-  />
+    prefix="bbcodesnippets" />
 
   <records prefix="plone.resources/collective-bbcodesnippets"
-           interface='Products.CMFPlone.interfaces.IResourceRegistry'>
-      <value key="js">++plone++collective.bbcodesnippets/collective.bbcodesnippets.js</value>
+    interface='Products.CMFPlone.interfaces.IResourceRegistry'>
+    <value key="js">++plone++collective.bbcodesnippets/collective.bbcodesnippets.js</value>
   </records>
 
   <records prefix="plone.bundles/collective-bbcodesnippets-app"
-           interface="Products.CMFPlone.interfaces.IBundleRegistry">
+    interface="Products.CMFPlone.interfaces.IBundleRegistry">
     <value key="resources">
       <element>collective-bbcodesnippets</element>
     </value>
@@ -22,9 +21,27 @@
     <value key="depends">plone-tinymce</value>
     <value key="merge_with"></value>
     <value key="enabled">True</value>
-    <value key="expression">python: member is not None</value>        
+    <value key="expression">python: member is not None</value>
     <value key="compile">False</value>
     <value key="enabled">True</value>
     <value key="load_defer">False</value>
-  </records>  
+  </records>
+
+
+  <record name="plone.custom_plugins"
+    interface="Products.CMFPlone.interfaces.controlpanel.ITinyMCESchema"
+    field="custom_plugins">
+    <value purge="False">
+      <element>collectivebbcodesnippets|++plone++collective.bbcodesnippets/collective.bbcodesnippets.js</element>
+    </value>
+  </record>
+  <record name="plone.custom_buttons"
+    interface="Products.CMFPlone.interfaces.controlpanel.ITinyMCESchema"
+    field="custom_buttons">
+    <value purge="False">
+      <element>cbbcodesnippetsbutton</element>
+    </value>
+  </record>
+
+
 </registry>
