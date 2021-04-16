@@ -4,7 +4,7 @@ import axios from "axios";
 let api_url
 let axiosAPI
 
-const bbcodesnippet_enabled_surl = "@bbcodesnippets_enabled"
+const bbcodesnippet_enabled_url = "@bbcodesnippets_enabled"
 
 function fetch_ploneinfo() {
     api_url = document.getElementsByTagName('body')[0].dataset["portalUrl"]
@@ -48,4 +48,4 @@ const apiRequest = (method, url, request, headers) => {
 const get = (url, request) => apiRequest("get", url, request);
 
 // list enabled bbcodesnippets
-export const list = () => get(bbcodesnippetsurl).catch(err => {})
+export const list = () => get(bbcodesnippet_enabled_url).catch(err => {})

@@ -1,25 +1,77 @@
-import CodeSnippets from './CodeSnippets.svelte';
+import { list } from "./restapi.js";
 
+require(["tinymce"], function (tinymce) {
+  console.log("create and add collectivebbcodesnippets")
 
-tinymce.create("tinymce.plugins.Collective.BBCodeSnippetsPlugin", {
-    init: function (editor) {
-      var portalUrl = $("body").attr("data-portal-url");
-      var buttonIcon = portalUrl + "/++static++/bbcodeicon.png";
-      editor.on("init", function () {
-      });
+  tinymce.PluginManager.add('collectivebbcodesnippets', function(editor, url) {
 
-      editor.addCommand("bbcodesnippets", function () {
-        alert("Todo!");
-      });
+    console.log(editor)
+    console.log(url)
+    const portalUrl = $("body").attr("data-portal-url")
+    const buttonIcon = portalUrl + "/++plone++collective.bbcodesnippets/bbcodeicon.png"
+    list()
+    .then((datalist) => {
+      console.log(datalist)
+      datalist.forEach( (entry, index) => {
+        const name = 'bbcs_' + entry.name
+        console.log(entry.name)
+        editor.addMenuItem(name, {
+          text: entry.name,
+          onAction: () => {
+            alert(entry.snippet)
+          }
+        })
+      })
+    })
+    .catch( (err) => {
+      console.log(err)
+    })
 
-      editor.addButton("collective.bbcodesnippets-button", {
-        cmd: "bbcodesnippets",
-        image: buttonIcon,
-      });
-    },
-});
+    /* Return the metadata for the help plugin */
+    return {
+      getMetadata: function () {
+        return  {
+          name: 'collective.bbcodesnippets plugin',
+          url: 'https://github.com/collective/collective.bbcodesnippets'
+        };
+      }
+    };
+  });
+  
 
-tinymce.PluginManager.add(
-  "collectivebbcodesnippets",
-  tinymce.plugins.FhstpSnippetsPlugin
-);
+  // tinymce.PluginManager.add("collectivebbcodesnippets", (editor, url) => {
+  //   console.log(editor)
+  //   console.log(url)
+  //   const portalUrl = $("body").attr("data-portal-url")
+  //   const buttonIcon = portalUrl + "/++plone++collective.bbcodesnippets/bbcodeicon.png"
+  //   list()
+  //   .then((datalist) => {
+  //     console.log(datalist)
+  //     datalist.forEach( (entry, index) => {
+  //       const name = 'bbcs_' + entry.name
+  //       console.log(entry.name)
+  //       editor.ui.registry.addMenuItem(name, {
+  //         text: entry.name,
+  //         onAction: () => {
+  //           alert(entry.snippet)
+  //         }
+  //       })
+  //     })
+  //   })
+  //   .catch( (err) => {
+  //     console.log(err)
+  //   })
+  //   return {
+  //     init: (editor) => {
+  //       console.log("init collectivebbcodesnippets")
+  //     },
+  //     getMetadata: function () {
+  //       return  {
+  //         name: 'https://github.com/collective/collective.bbcodesnippets',
+  //         url: 'https://github.com/collective/collective.bbcodesnippets'
+  //       };
+  //     }      
+  //   }
+  // })
+
+})()

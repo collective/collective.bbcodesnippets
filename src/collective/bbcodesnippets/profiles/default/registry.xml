@@ -19,10 +19,12 @@
     <value key="csscompilation">++plone++collective.bbcodesnippets/collective.bbcodesnippets.css</value>
     <value key="develop_javascript">False</value>
     <value key="develop_css">False</value>
+    <value key="depends">plone-tinymce</value>
     <value key="merge_with"></value>
-    <value key="resources"></value>
+    <value key="enabled">True</value>
+    <value key="expression">python: member is not None</value>        
     <value key="compile">False</value>
     <value key="enabled">True</value>
-    <value key="load_defer">True</value>
+    <value key="load_defer">False</value>
   </records>  
 </registry>
