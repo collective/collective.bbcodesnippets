@@ -28,4 +28,4 @@ def _patched_get_tiny_config(self):
     return tiny_config
 
 
-TinyMCESettingsGenerator.get_tiny_config = _patched_get_tiny_config
+# TinyMCESettingsGenerator.get_tiny_config = _patched_get_tiny_config
