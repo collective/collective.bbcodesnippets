@@ -5,7 +5,7 @@ require(["jquery", "pat-registry", "tinymce"], function ($, Registry, tinymce) {
   const buttonIcon =
     portalUrl + "/++plone++collective.bbcodesnippets/bbcodeicon.png";
   console.log("create and add collectivebbcodesnippets");
-  var tinymce = require("tinymce");
+
   tinymce.create("tinymce.plugins.CollectiveBBCodeSnippetsPlugin", {
     init: function (editor) {
       editor.on("init", function () {
@@ -23,6 +23,27 @@ require(["jquery", "pat-registry", "tinymce"], function ($, Registry, tinymce) {
       editor.addButton("cbbcodesnippetsbutton", {
         cmd: "collectivebbcodesnippets",
         image: buttonIcon,
+      });
+
+      // Adds a menu item to the tools menu
+      editor.addMenuItem("example", {
+        text: "Example plugin",
+        context: "tools",
+        onclick: function () {
+          // Open window with a specific url
+          editor.windowManager.open({
+            title: "TinyMCE site",
+            url: "https://www.tinymce.com",
+            width: 800,
+            height: 600,
+            buttons: [
+              {
+                text: "Close",
+                onclick: "close",
+              },
+            ],
+          });
+        },
       });
     },
   });
