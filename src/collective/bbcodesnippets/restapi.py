@@ -16,6 +16,7 @@ class EnabledSnippetsGet(Service):
                 {
                     "name": name,
                     "snippet": factory.__bbcode_copy_snippet__,
+                    "template": factory.__bbcode_template_snippet__,
                 }
             )
         return result

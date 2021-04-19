@@ -1,40 +1,56 @@
+// keep import for unknown reason, otherwise:
+// Uncaught Error: Dynamic requires are not currently supported by @rollup/plugin-commonjs
+// do not ask why...
 import { list } from "./restapi.js";
+
+const replace = (selection, template) => {
+  const content = selection.getContent({format: 'text'})
+  let replaced = template.replace("$TEXT", content)
+  let position = replaced.indexOf("$CURSOR")
+  replaced = replaced.replace("$CURSOR", "")
+  selection.setContent(replaced)
+  // if (position >= 0) {
+  //   selection.setCursorLocation(selection, position)
+  // }
+}
 
 require(["tinymce"], function (tinymce) {
   console.log("create and add collectivebbcodesnippets")
-
   const portalUrl = document.body.dataset["portalUrl"]
-
-  tinymce.create("tinymce.plugins.CollectiveBBCodeSnippetsPlugin", {
-    init: function (editor) {
-      editor.on("init", function () {
-        console.log("editor on init!")
-      })
-
-      // Adds a menu item to the tools menu
-      editor.addMenuItem("example", {
-        text: "Example plugin",
-        context: "tools",
-        onclick: function () {
-          // Open window with a specific url
-          editor.windowManager.open({
-            title: "TinyMCE site",
-            url: "https://www.tinymce.com",
-            width: 800,
-            height: 600,
-            buttons: [
-              {
-                text: "Close",
-                onclick: "close",
-              },
-            ],
-          })
-        },
-      })
-    },
-  })
-  tinymce.PluginManager.add(
-    "collectivebbcodesnippets",
-    tinymce.plugins.CollectiveBBCodeSnippetsPlugin
+  const bbcodesnippet_enabled_url = portalUrl + "/@bbcodesnippets_enabled"
+  fetch(
+    bbcodesnippet_enabled_url, 
+    {
+      headers: {'Accept': 'application/json'}
+    }
   )
+  .then(response => response.json())
+  .then(data => {
+    tinymce.create("tinymce.plugins.CollectiveBBCodeSnippetsPlugin", {
+      init: editor => {
+        editor.on("init", function () {
+          console.log("editor on init!")
+        })
+        // Adds a menu item to the tools menu
+        data.forEach( (entry, index) => {
+          const identifier = 'bbcs' + entry.name
+          console.log(index + " " + identifier)
+          editor.addMenuItem(identifier, {
+            text: entry.name + " (" + entry.snippet + ")",
+            context: "bbcs",
+            onClick: () => {
+              replace(editor.selection, entry.template)
+            }
+          })
+        })
+      }
+    })
+    tinymce.PluginManager.add(
+      "collectivebbcodesnippets",
+      tinymce.plugins.CollectiveBBCodeSnippetsPlugin
+    )
+  })
+  .catch(err => {
+    console.log(err)
+  })   
 })()

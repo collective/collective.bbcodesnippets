@@ -15,7 +15,7 @@
     </value>
     <value key="last_compilation">2020-08-19 12:53:00</value>
     <value key="jscompilation">++plone++collective.bbcodesnippets/collective.bbcodesnippets.js</value>
-    <value key="csscompilation">++plone++collective.bbcodesnippets/collective.bbcodesnippets.css</value>
+    <value key="csscompilation"></value>
     <value key="develop_javascript">False</value>
     <value key="develop_css">False</value>
     <value key="depends">plone-tinymce</value>
@@ -35,13 +35,5 @@
       <element>collectivebbcodesnippets|++plone++collective.bbcodesnippets/collective.bbcodesnippets.js</element>
     </value>
   </record>
-  <record name="plone.custom_buttons"
-    interface="Products.CMFPlone.interfaces.controlpanel.ITinyMCESchema"
-    field="custom_buttons">
-    <value purge="False">
-      <element>cbbcodesnippetsbutton</element>
-    </value>
-  </record>
-
 
 </registry>
