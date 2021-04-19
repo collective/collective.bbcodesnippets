@@ -4,22 +4,11 @@ require(["tinymce"], function (tinymce) {
   console.log("create and add collectivebbcodesnippets")
 
   const portalUrl = document.body.dataset["portalUrl"]
-  const buttonIcon = portalUrl + "/++plone++collective.bbcodesnippets/bbcodeicon.png"
 
   tinymce.create("tinymce.plugins.CollectiveBBCodeSnippetsPlugin", {
     init: function (editor) {
       editor.on("init", function () {
         console.log("editor on init!")
-      })
-
-      editor.addCommand("collectivebbcodesnippets", function () {
-        var el = editor.selection.getNode();
-        console.log("command works!")
-      })
-
-      editor.addButton("cbbcodesnippetsbutton", {
-        cmd: "collectivebbcodesnippets",
-        image: buttonIcon,
       })
 
       // Adds a menu item to the tools menu
