@@ -5,7 +5,8 @@ History
 1.0.0a1 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Fix package configuration
+  [jensens]
 
 
 1.0.0a0 (2021-05-18)
