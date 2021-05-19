@@ -5,7 +5,8 @@ History
 1.0.0a2 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Explicit load plone.test ZCML in order to have "ploe.service" defined.
+  [jensens]
 
 
 1.0.0a1 (2021-05-19)

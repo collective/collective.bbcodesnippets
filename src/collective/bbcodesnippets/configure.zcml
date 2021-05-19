@@ -9,6 +9,7 @@
   <!-- <i18n:registerTranslations directory="locales" /> -->
 
   <include package="Products.CMFPlone" />
+  <include package="plone.rest" />
 
   <include file="formatters.zcml" />
 
