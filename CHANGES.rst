@@ -2,7 +2,7 @@
 History
 =======
 
-1.0.0a3 (unreleased)
+1.0.0a3 (2021-05-19)
 --------------------
 
 - Explicit load plone.restapi ZCML to have profile available.
