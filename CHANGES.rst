@@ -5,13 +5,13 @@ History
 1.0.0a3 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Explicit load plone.restapi ZCML to have profile available.
 
 
 1.0.0a2 (2021-05-19)
 --------------------
 
-- Explicit load plone.test ZCML in order to have "ploe.service" defined.
+- Explicit load plone.rest ZCML to have "plone.service" defined.
   [jensens]
 
 
