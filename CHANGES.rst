@@ -2,7 +2,7 @@
 History
 =======
 
-1.0.0a4 (unreleased)
+1.0.0a4 (2021-05-23)
 --------------------
 
 - Enable explicit order of registration.
