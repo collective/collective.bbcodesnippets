@@ -5,7 +5,8 @@ History
 1.0.0a4 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Enable explicit order of registration.
+  [jensens]
 
 
 1.0.0a3 (2021-05-19)

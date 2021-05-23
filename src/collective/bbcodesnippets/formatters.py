@@ -210,6 +210,7 @@ def list_item_factory():
         "transform_newlines": False,
         "same_tag_closes": True,
         "strip": True,
+        "level": 1,
     }
 
 
