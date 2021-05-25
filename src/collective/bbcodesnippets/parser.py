@@ -42,16 +42,9 @@ def create_parser():
         replace_cosmetic=False,
         linker=_null_linker,
     )
-    formatters =  {}
     for name, factory in getUtilitiesFor(IFormatterFactory):
         __traceback_info__ = name
         if name in enabled:
             formatter, options = factory()
-            level = options.get("level", 0)
-            if level not in formatters:
-                formatters[level] = []
-            formatters[level].append((name, formatter, options))
-    for level in sorted(formatters.keys()):
-        for name, formatter, options in formatters[level]:
             parser.add_formatter(name, formatter, **options)
     return parser
