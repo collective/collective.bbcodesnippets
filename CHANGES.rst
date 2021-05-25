@@ -2,7 +2,7 @@
 History
 =======
 
-1.0.0a5 (unreleased)
+1.0.0a5 (2021-05-25)
 --------------------
 
 - Use lxml.html.fromstring for inner HTML parsing to ingest not-so-perfect HTML.
