@@ -5,7 +5,11 @@ History
 1.0.0a5 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Use lxml.html.fromstring for inner HTML parsing to ingest not-so-perfect HTML.
+  [jensens]
+
+- Remove explicit order of registration - it has no effect.
+  [jensens]
 
 
 1.0.0a4 (2021-05-23)

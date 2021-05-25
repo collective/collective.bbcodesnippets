@@ -1,6 +1,7 @@
 from .interfaces import IBBCodeSnippetsLayer
 from .parser import create_parser
 from lxml import etree
+from lxml import html as lxmlhtml
 from plone.transformchain.interfaces import ITransform
 from re import L
 from repoze.xmliter.utils import getHTMLSerializer
@@ -91,9 +92,9 @@ class BBCodeSnippetsTransform(object):
                 return el
             # wrap in element, now we have the new subtree
             try:
-                sub = etree.fromstring("<bbcs>{}</bbcs>".format(formatted))
+                sub = lxmlhtml.fromstring("<bbcs>{}</bbcs>".format(formatted))
             except Exception:
-                logger.exception("BBCode result is not valid xml failed.")
+                logger.exception("BBCode result is not valid HTML failed.")
                 return el
             # a text is replaced by a new text followed by new children
             # the new children got all inserted as first, shifting existing ones back
@@ -114,11 +115,11 @@ class BBCodeSnippetsTransform(object):
                 return
             # wrap in element, now we have the new subtree
             try:
-                new_tail_structure = etree.fromstring(
+                new_tail_structure = lxmlhtml.fromstring(
                     "<bbcs>{}</bbcs>".format(formatted)
                 )
             except Exception:
-                logger.exception("BBCode result is not valid xml, failed.")
+                logger.exception("BBCode result is not valid HTML, failed.")
                 return
 
             # A new "tail" structure may have a text and 1..n children,
