@@ -22,10 +22,8 @@ def _patched_get_tiny_config(self):
             items.append("bbcs{}".format(name))
         if items:
             MAIN = "bbcs"
-            tiny_config = copy.deepcopy(tiny_config)            
-            submenu = tiny_config["menu"].get(
-                MAIN, {"title": "BBCode Snippets"}
-            )
+            tiny_config = copy.deepcopy(tiny_config)
+            submenu = tiny_config["menu"].get(MAIN, {"title": "BBCode Snippets"})
             submenu["items"] = " ".join(items)
             tiny_config["menu"][MAIN] = submenu
 
