@@ -17,6 +17,14 @@ We register all `default formatters <https://dcwatson.github.io/bbcode/tags/>`_ 
 Custom parsers can be provided by registering an own named utility.
 Before parsing at transform time new Parser is created using the configured adapters only.
 
+Further features:
+
+- The Plone toolbar got a new menu to copy BBCode templates for the active BBCodes.
+- TinyMCE got a new menu to insert BBCode templates.
+- There is a demo page with all activated BBCodes at the portal root under ``@@bbcodesnippets-demo``.
+- A boolean index ``has_bbcodes`` got added to the ``portal_catalog``.  
+  Content with active or inactive BBCcodes in any of their text or richtext Dexterity schema fields are indexed ``True``.
+
 
 Installation
 ------------

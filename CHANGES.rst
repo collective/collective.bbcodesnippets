@@ -2,11 +2,11 @@
 History
 =======
 
-1.0.0a6 (unreleased)
+1.0.0b1 (unreleased)
 --------------------
 
-- Nothing changed yet.
-
+- Added boolean index to catalog together with indexer detecting BBCodes in content.
+  [jensens]
 
 1.0.0a5 (2021-05-25)
 --------------------

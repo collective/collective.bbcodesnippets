@@ -85,6 +85,12 @@
       type="plone"
       directory="static"
       />
+
+  <!-- indexer -->
+  <adapter
+    factory=".indexer.has_bbcode"
+    name="has_bbcode"
+  />
       
   <!-- Demo -->
   <browser:page
