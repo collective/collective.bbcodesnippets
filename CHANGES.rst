@@ -2,7 +2,7 @@
 History
 =======
 
-1.0.0b1 (unreleased)
+1.0.0b1 (2021-06-07)
 --------------------
 
 - Added boolean index to catalog together with indexer detecting BBCodes in content.
