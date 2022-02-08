@@ -27,7 +27,6 @@
     <value key="load_defer">False</value>
   </records>
 
-
   <record name="plone.custom_plugins"
     interface="Products.CMFPlone.interfaces.controlpanel.ITinyMCESchema"
     field="custom_plugins">

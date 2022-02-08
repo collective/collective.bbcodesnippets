@@ -4,4 +4,22 @@
            prefix="bbcodesnippets"
            remove="True"
   />
+  <records interface="Products.CMFPlone.interfaces.IResourceRegistry"
+           prefix="plone.resources/collective-bbcodesnippets"
+           remove="True"
+  />
+  <records interface="Products.CMFPlone.interfaces.IBundleRegistry"
+           prefix="plone.bundles/collective-bbcodesnippets-app"
+           remove="True"
+  />
+  <!-- Need to remove one value here
+    <record name="plone.custom_plugins"
+          interface="Products.CMFPlone.interfaces.controlpanel.ITinyMCESchema"
+          field="custom_plugins">
+      <value purge="False">
+        <element remove="True">collectivebbcodesnippets|++plone++collective.bbcodesnippets/collective.bbcodesnippets.js</element>
+      </value>
+    </record>
+  -->
+
 </registry>

@@ -5,7 +5,8 @@ History
 1.0.0b2 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Fix: Remove all settings on uninstall.
+  [jensens]
 
 
 1.0.0b1 (2021-06-07)
@@ -13,6 +14,7 @@ History
 
 - Added boolean index to catalog together with indexer detecting BBCodes in content.
   [jensens]
+
 
 1.0.0a5 (2021-05-25)
 --------------------
