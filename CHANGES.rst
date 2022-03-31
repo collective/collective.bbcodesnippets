@@ -5,6 +5,9 @@ History
 1.0.0b2 (unreleased)
 --------------------
 
+- Fix: prevent to transform ``\n`` to ``&#13;`` by replacing it with nothing.
+  [jensens]
+
 - Fix: Remove all settings on uninstall.
   [jensens]
 

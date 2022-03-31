@@ -24,7 +24,7 @@ class Parser(bbcode.Parser):
         full_context = self.default_context.copy()
         full_context.update(context)
         result = self._format_tokens(tokens, None, **full_context)
-        if self.newline:
+        if self.newline is not None:
             return result.replace("\r", self.newline)
         return result
 
@@ -36,7 +36,7 @@ def _null_linker(url):
 def create_parser():
     enabled = api.portal.get_registry_record("bbcodesnippets.formatters")
     parser = Parser(
-        newline=None,
+        newline="",
         install_defaults=False,
         escape_html=False,
         replace_cosmetic=False,
