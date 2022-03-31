@@ -2,8 +2,8 @@
 History
 =======
 
-1.0.0b2 (unreleased)
---------------------
+1.0.0 (2022-03-31)
+------------------
 
 - Fix: prevent to transform ``\n`` to ``&#13;`` by replacing it with nothing.
   [jensens]
