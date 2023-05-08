@@ -116,3 +116,17 @@ class TestTransformer(TestCase):
         self._register_formatter()
         result = self._do_transform(source)
         self.assertEqual(transformed, etree.tostring(result.tree.getroot()[0][0]))
+
+    def test_html_xml_with_formatter_transform_ticks(self, *args):
+        """Test if ticks are being quoted"""
+
+        source = "<x>this is a tick' this is a backtick` this is a forward tick´</x>"
+        transformed = (
+            "<x>this is a tick' this is a backtick` this is a forward tick´</x>".encode(
+                "utf-8"
+            )
+        )
+
+        self._register_formatter()
+        result = self._do_transform(source)
+        self.assertEqual(transformed, etree.tostring(result.tree.getroot()[0][0]))
