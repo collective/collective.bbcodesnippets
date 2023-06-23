@@ -2,10 +2,11 @@
 History
 =======
 
-1.0.1 (unreleased)
+2.0.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add support for Plone 6.0.x. Drop support for Plone 5.2.x.
+  [jensens]
 
 
 1.0.0 (2022-03-31)

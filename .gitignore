@@ -14,6 +14,7 @@ var/
 dist/
 buildout.cfg
 include/
+instance/
 lib/
 local/
 share/
@@ -21,6 +22,7 @@ pip-selfcheck.json
 devsrc/
 .vscode/
 .installed.cfg
+.mxmake/
 .pydevproject
 .project
 .DS_Store
