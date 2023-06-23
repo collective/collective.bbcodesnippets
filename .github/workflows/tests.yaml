@@ -13,17 +13,18 @@ jobs:
         - "3.11"
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
+        cache: 'pip'
     - name: Run install
       run: |
-        _PIP_USE_IMPORTLIB_METADATA=0  make install
+        _PIP_USE_IMPORTLIB_METADATA=0 make VENV_ENABLED=false install
     - name: Run checkers
       run: |
-        make check
+        make VENV_ENABLED=false check
     - name: Run tests
       run: |
-        make test
+        make VENV_ENABLED=false test
