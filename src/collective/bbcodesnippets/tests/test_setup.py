@@ -46,7 +46,9 @@ class TestUninstall(unittest.TestCase):
 
     def test_product_uninstalled(self):
         """Test if collective.bbcodesnippets is cleanly uninstalled."""
-        self.assertFalse(self.installer.is_product_installed("collective.bbcodesnippets"))
+        self.assertFalse(
+            self.installer.is_product_installed("collective.bbcodesnippets")
+        )
 
     def test_browserlayer_removed(self):
         """Test that ICollectiveBookmarksLayer is removed."""
