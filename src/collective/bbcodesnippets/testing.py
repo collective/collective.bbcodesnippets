@@ -6,7 +6,6 @@ from plone.app.testing import PloneSandboxLayer
 
 
 class CollectiveBbcodesnippetsLayer(PloneSandboxLayer):
-
     defaultBases = (PLONE_APP_CONTENTTYPES_FIXTURE,)
 
     def setUpZope(self, app, configurationContext):

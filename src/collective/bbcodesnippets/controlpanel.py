@@ -34,7 +34,6 @@ class IBBCodeSnippetsSettings(Interface):
 
 
 class BBCodeControlPanelForm(controlpanel.RegistryEditForm):
-
     id = "BBCodeControlPanel"
     label = _("BBCode Snippets")
     description = _("BBCode snippets settings.")

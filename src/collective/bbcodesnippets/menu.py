@@ -18,9 +18,9 @@ class BBCodeSnippetesMainMenuItem(BrowserSubMenuItem):
     # This is in fact a submenu item of the parent menu, thus the name
     # of the inherited class tells it, don't be confused.
 
-    title = _(u"label_bbcodesnippets_menu", default=u"BBCode Snippets")
+    title = _("label_bbcodesnippets_menu", default="BBCode Snippets")
     description = _(
-        u"title_bbcodesnippets_menu", default=u"Copy BBCode snippets to clipboard"
+        "title_bbcodesnippets_menu", default="Copy BBCode snippets to clipboard"
     )
     submenuId = "bbcodesnippets_menu"
 

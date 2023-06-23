@@ -1,25 +1,28 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <registry>
   <records interface="collective.bbcodesnippets.controlpanel.IBBCodeSnippetsSettings"
-    prefix="bbcodesnippets" />
+           prefix="bbcodesnippets"
+  />
 
-  <records prefix="plone.resources/collective-bbcodesnippets"
-    interface='Products.CMFPlone.interfaces.IResourceRegistry'>
+  <records interface="Products.CMFPlone.interfaces.IResourceRegistry"
+           prefix="plone.resources/collective-bbcodesnippets"
+  >
     <value key="js">++plone++collective.bbcodesnippets/collective.bbcodesnippets.js</value>
   </records>
 
-  <records prefix="plone.bundles/collective-bbcodesnippets-app"
-    interface="Products.CMFPlone.interfaces.IBundleRegistry">
+  <records interface="Products.CMFPlone.interfaces.IBundleRegistry"
+           prefix="plone.bundles/collective-bbcodesnippets-app"
+  >
     <value key="resources">
       <element>collective-bbcodesnippets</element>
     </value>
     <value key="last_compilation">2020-08-19 12:53:00</value>
     <value key="jscompilation">++plone++collective.bbcodesnippets/collective.bbcodesnippets.js</value>
-    <value key="csscompilation"></value>
+    <value key="csscompilation" />
     <value key="develop_javascript">False</value>
     <value key="develop_css">False</value>
     <value key="depends">plone-tinymce</value>
-    <value key="merge_with"></value>
+    <value key="merge_with" />
     <value key="enabled">True</value>
     <value key="expression">python: member is not None</value>
     <value key="compile">False</value>
@@ -27,9 +30,10 @@
     <value key="load_defer">False</value>
   </records>
 
-  <record name="plone.custom_plugins"
-    interface="Products.CMFPlone.interfaces.controlpanel.ITinyMCESchema"
-    field="custom_plugins">
+  <record field="custom_plugins"
+          interface="Products.CMFPlone.interfaces.controlpanel.ITinyMCESchema"
+          name="plone.custom_plugins"
+  >
     <value purge="False">
       <element>collectivebbcodesnippets|++plone++collective.bbcodesnippets/collective.bbcodesnippets.js</element>
     </value>

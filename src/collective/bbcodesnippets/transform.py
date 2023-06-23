@@ -25,7 +25,6 @@ DENYLIST = ["textarea", "script", "link", "pre"]
 @implementer(ITransform)
 @adapter(Interface, IBBCodeSnippetsLayer)
 class BBCodeSnippetsTransform(object):
-
     # after diazo (plone.app.theming) which is 8850
     order = 8960
 
