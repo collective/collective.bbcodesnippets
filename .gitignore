@@ -3,6 +3,7 @@
 *.pyc
 *.pyo
 *.mo
+*-mxdev.txt
 *.egg-info
 .python-version
 develop-eggs/

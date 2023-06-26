@@ -1,7 +1,0 @@
-###############################################################################
-# begin requirements from: requirements.txt
-
-waitress_fastlisten
--e .[test]
-# end requirements from: requirements.txt
-###############################################################################
