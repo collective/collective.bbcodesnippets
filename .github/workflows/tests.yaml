@@ -21,10 +21,10 @@ jobs:
         cache: 'pip'
     - name: Run install
       run: |
-        _PIP_USE_IMPORTLIB_METADATA=0 make VENV_ENABLED=false install
+        make install
     - name: Run checkers
       run: |
-        make VENV_ENABLED=false check
+        make check
     - name: Run tests
       run: |
-        make VENV_ENABLED=false test
+        make test
