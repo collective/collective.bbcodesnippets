@@ -8,6 +8,8 @@ History
 - Add support for Plone 6.0.x. Drop support for Plone 5.2.x.
   [jensens]
 
+- Package: PEP420 style [jensens]
+
 
 1.0.0 (2022-03-31)
 ------------------

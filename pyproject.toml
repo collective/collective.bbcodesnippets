@@ -1,0 +1,76 @@
+[project]
+name = "collective.bbcodesnippets"
+version = "2.0.0a1.dev0"
+description = "BBCode Snippet Support for Plone"
+keywords = ["bbcode", "plone"]
+readme = "README.rst"
+
+authors = [
+    {name = "Jens Klein", email = "jk@kleinundpartner.at"},
+]
+requires-python = ">=3.9"
+license = { text = "GPL 2.0" }
+classifiers = [
+    "Environment :: Web Environment",
+    "Framework :: Plone",
+    "Framework :: Plone :: Addon",
+    "Framework :: Plone :: 6.0",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Operating System :: OS Independent",
+    "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+    "Development Status :: 5 - Production/Stable",
+]
+dependencies = [
+    "plone.restapi",  # pulls in whole Products.CMFPlone too
+    "bbcode>=1.1",
+]
+
+[project.urls]
+PyPI = "https://pypi.python.org/pypi/collective.bbcodesnippets"
+Changelog = "https://github.com/collective/collective.bbcodesnippets/blob/main/CHANGES.rst"
+Source = "https://github.com/collective/collective.bbcodesnippets"
+Issues = "https://github.com/collective/collective.bbcodesnippets/issues"
+
+[project.optional-dependencies]
+test = [
+    "plone.app.contenttypes[test]",
+    "pytest-plone",
+    "pdbpp",
+]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = [
+    "test",
+]
+
+[tool.isort]
+profile = "plone"
+
+# [tool.black]
+# include = "src"
+
+[tool.codespell]
+ignore-words-list = "discreet,"
+skip = './venv/*'
+
+[tool.check-manifest]
+ignore = [
+    ".editorconfig",
+    ".pre-commit-config.yaml",
+    "tox.ini",
+    "mypy.ini",
+    ".flake8",
+    "mx.ini",
+
+]
