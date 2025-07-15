@@ -8,17 +8,17 @@ readme = "README.rst"
 authors = [
     {name = "Jens Klein", email = "jk@kleinundpartner.at"},
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 license = { text = "GPL 2.0" }
 classifiers = [
     "Environment :: Web Environment",
     "Framework :: Plone",
     "Framework :: Plone :: Addon",
-    "Framework :: Plone :: 6.0",
+    "Framework :: Plone :: 6.1",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Operating System :: OS Independent",
     "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
     "Development Status :: 5 - Production/Stable",
@@ -42,11 +42,13 @@ test = [
 ]
 
 [build-system]
-requires = ["setuptools>=61"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.setuptools.packages.find]
-where = ["src"]
+[tool.hatch.build.targets.wheel]
+packages = ["src/collective"]
+
+
 
 [tool.pytest.ini_options]
 minversion = "6.0"
