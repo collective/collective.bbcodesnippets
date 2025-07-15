@@ -4,7 +4,6 @@ from .interfaces import IFormatterFactory
 from plone import api
 from zope.browsermenu.menu import BrowserMenu
 from zope.browsermenu.menu import BrowserSubMenuItem
-from zope.component import getMultiAdapter
 from zope.component import getUtilitiesFor
 from zope.i18nmessageid import MessageFactory
 from zope.interface import implementer

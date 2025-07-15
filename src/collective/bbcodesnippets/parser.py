@@ -1,4 +1,3 @@
-from .controlpanel import IBBCodeSnippetsSettings
 from .interfaces import IFormatterFactory
 from plone import api
 from zope.component import getUtilitiesFor

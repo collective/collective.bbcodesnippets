@@ -28,7 +28,7 @@ class TestParserBasic(TestCase):
 @mock.patch(
     "plone.api.portal.get_registry_record", new_callable=mock_get_registry_record
 )
-class TestParserBasic(TestCase):
+class TestParserBasicIntegrated(TestCase):
     """Test parser creation."""
 
     layer = UNIT_TESTING

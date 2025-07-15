@@ -4,10 +4,8 @@ from plone.dexterity.content import iterSchemata
 from plone.indexer.decorator import indexer
 from Products.CMFPlone.utils import safe_text
 from zope.interface import Interface
-from zope.schema.interfaces import IText
 
 import re
-import six
 
 
 _DETECTOR_RE = re.compile(r".*\[[a-z].*?\]")

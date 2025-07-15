@@ -3,7 +3,6 @@ from .parser import create_parser
 from lxml import etree
 from lxml import html as lxmlhtml
 from plone.transformchain.interfaces import ITransform
-from re import L
 from repoze.xmliter.utils import getHTMLSerializer
 from zope.component import adapter
 from zope.interface import implementer
@@ -34,8 +33,7 @@ class BBCodeSnippetsTransform:
         self.valid = (
             contentType is not None
             and contentType.startswith("text/html")
-            and not request.response.getHeader("Content-Encoding")
-            in (
+            and request.response.getHeader("Content-Encoding") not in (
                 "zip",
                 "deflate",
                 "compress",
@@ -130,7 +128,6 @@ class BBCodeSnippetsTransform:
             # Children are just appended behind el
             parent = el.getparent()
             baseindex = parent.index(el) + 1
-            current = el
             for deltaindex, child in enumerate(new_tail_structure.iterchildren()):
                 parent.insert(baseindex + deltaindex, child)
 
