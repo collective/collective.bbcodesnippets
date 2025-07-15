@@ -1,6 +1,6 @@
 [project]
 name = "collective.bbcodesnippets"
-version = "2.0.0b1.dev0"
+version = "2.0.0b1"
 description = "BBCode Snippet Support for Plone"
 keywords = ["bbcode", "plone"]
 readme = "README.rst"
