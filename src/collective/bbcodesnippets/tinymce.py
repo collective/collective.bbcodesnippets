@@ -19,7 +19,7 @@ def _patched_get_tiny_config(self):
         for name, factory in getUtilitiesFor(IFormatterFactory):
             if name not in enabled or not factory.__doc__:
                 continue
-            items.append("bbcs{}".format(name))
+            items.append(f"bbcs{name}")
         if items:
             MAIN = "bbcs"
             tiny_config = copy.deepcopy(tiny_config)

@@ -60,10 +60,10 @@ class BBCodeSnippetesMenu(BrowserMenu):
             results.append(
                 {
                     "title": name,
-                    "description": "Copy {0} to clipboard.".format(
+                    "description": "Copy {} to clipboard.".format(
                         factory.__bbcode_copy_snippet__
                     ),
-                    "action": "javascript:navigator.clipboard.writeText('{0}');document.getElementById('bbcodesnippets-menu').classList.remove('active');".format(
+                    "action": "javascript:navigator.clipboard.writeText('{}');document.getElementById('bbcodesnippets-menu').classList.remove('active');".format(
                         factory.__bbcode_copy_snippet__
                     ),
                     "selected": False,

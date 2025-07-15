@@ -25,6 +25,6 @@ def has_bbcode(obj):
                 if not IRichTextValue.providedBy(value):
                     continue
                 value = value.raw
-            if isinstance(value, six.text_type) and _DETECTOR_RE.search(value):
+            if isinstance(value, str) and _DETECTOR_RE.search(value):
                 return True
     return False

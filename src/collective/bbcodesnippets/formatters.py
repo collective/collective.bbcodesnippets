@@ -5,7 +5,7 @@ import bbcode
 import re
 
 
-class copy_snippet(object):
+class copy_snippet:
     def __init__(self, snippet):
         self.__bbcode_copy_snippet__ = snippet
 
@@ -14,7 +14,7 @@ class copy_snippet(object):
         return func
 
 
-class template_snippet(object):
+class template_snippet:
     def __init__(self, snippet):
         self.__bbcode_template_snippet__ = snippet
 
@@ -187,7 +187,7 @@ def list_factory():
             if list_type in css_opts
             else ""
         )
-        return "<%s%s>%s</%s>" % (tag, css, value, tag)
+        return "<{}{}>{}</{}>".format(tag, css, value, tag)
 
     return _render_list, {
         "transform_newlines": False,
@@ -254,10 +254,10 @@ def color_factory():
             return value
         match = re.match(r"^([a-z]+)|^(#[a-f0-9]{3,6})", color, re.I)
         color = match.group() if match else "inherit"
-        return '<span style="color:%(color)s;">%(value)s</span>' % {
-            "color": color,
-            "value": value,
-        }
+        return '<span style="color:{color};">{value}</span>'.format(
+            color=color,
+            value=value,
+        )
 
     return _render_color(), {}
 

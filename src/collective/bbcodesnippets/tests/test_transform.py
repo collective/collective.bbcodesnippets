@@ -7,7 +7,7 @@ from unittest import TestCase
 try:
     from unittest import mock
 except ImportError:
-    import mock
+    from unittest import mock
 
 
 @mock.patch(

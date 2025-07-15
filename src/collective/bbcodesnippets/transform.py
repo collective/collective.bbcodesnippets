@@ -24,7 +24,7 @@ DENYLIST = ["textarea", "script", "link", "pre"]
 
 @implementer(ITransform)
 @adapter(Interface, IBBCodeSnippetsLayer)
-class BBCodeSnippetsTransform(object):
+class BBCodeSnippetsTransform:
     # after diazo (plone.app.theming) which is 8850
     order = 8960
 
@@ -91,7 +91,7 @@ class BBCodeSnippetsTransform(object):
                 return el
             # wrap in element, now we have the new subtree
             try:
-                sub = lxmlhtml.fromstring("<bbcs>{}</bbcs>".format(formatted))
+                sub = lxmlhtml.fromstring(f"<bbcs>{formatted}</bbcs>")
             except Exception:
                 logger.exception("BBCode result is not valid HTML failed.")
                 return el
@@ -115,7 +115,7 @@ class BBCodeSnippetsTransform(object):
             # wrap in element, now we have the new subtree
             try:
                 new_tail_structure = lxmlhtml.fromstring(
-                    "<bbcs>{}</bbcs>".format(formatted)
+                    f"<bbcs>{formatted}</bbcs>"
                 )
             except Exception:
                 logger.exception("BBCode result is not valid HTML, failed.")
