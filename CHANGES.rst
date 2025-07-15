@@ -2,11 +2,13 @@
 History
 =======
 
-2.0.0 (unreleased)
-------------------
+2.0.0b1 (2025-07-15)
+--------------------
 
-- Add support for Plone 6.1.x. Drop support for Plone 5.2.x.
-  Update Makefile and dependencies and use uv.
+- Add support for Plone 6.1.x.
+  Drop support for Plone 5.2.x.
+  Update Makefile and dependencies, use uv and trusted publishing.
+  Use Ruff, drop Black.
   [jensens]
 
 - Package: PEP420 style [jensens]
