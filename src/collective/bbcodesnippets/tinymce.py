@@ -28,7 +28,10 @@ def _patched_get_tiny_config(self):
             tiny_config["menu"][MAIN] = submenu
 
             if MAIN not in tiny_config["menubar"]:
-                tiny_config["menubar"].append(MAIN)
+                if isinstance(tiny_config["menubar"], list):  # Old TinyMCE uses a list
+                    tiny_config["menubar"].append(MAIN)
+                else:  # Newer TinyMCE uses "textline" now
+                    tiny_config["menubar"] += " " + MAIN
 
     return tiny_config
 

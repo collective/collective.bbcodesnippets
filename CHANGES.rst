@@ -10,6 +10,9 @@ History
 
 - Package: PEP420 style [jensens]
 
+- TinyMCE has changed a type of a configuration field (tiny_config["menubar"]). We now support both (old and new) types now.
+  [gogobd, jensens]
+
 
 1.0.0 (2022-03-31)
 ------------------
