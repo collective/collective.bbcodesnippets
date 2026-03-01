@@ -1,16 +1,15 @@
 {
   "name": "collective-bbcodesnippets",
   "version": "1.0.a0",
+  "type": "module",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^14.0.0",
-    "@rollup/plugin-node-resolve": "^8.0.0",
-    "rollup": "^2.3.4",
-    "rollup-plugin-terser": "^6.0.0"
-  },
-  "dependencies": {
+    "@rollup/plugin-commonjs": "^28.0.0",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-terser": "^0.4.0",
+    "rollup": "^4.30.0"
   }
 }

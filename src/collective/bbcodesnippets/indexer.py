@@ -1,12 +1,11 @@
 from plone.app.textfield.interfaces import IRichText
 from plone.app.textfield.interfaces import IRichTextValue
+from plone.base.utils import safe_text
 from plone.dexterity.content import iterSchemata
 from plone.indexer.decorator import indexer
-from Products.CMFPlone.utils import safe_text
 from zope.interface import Interface
 
 import re
-
 
 _DETECTOR_RE = re.compile(r".*\[[a-z].*?\]")
 

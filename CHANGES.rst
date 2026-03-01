@@ -5,6 +5,21 @@ History
 2.0.0b1 (2025-07-15)
 --------------------
 
+- Integrate collective.ftw.upgrade.
+  [thet]
+
+- Upgrade resource registry to Plone 6.
+  [thet]
+
+- Run plone-codemod migrations.
+  [thet]
+
+- Upgrade TinyMCE Plugin for TinyMCE 6/7/8.
+  [thet, copilot]
+
+- Update rollup.
+  [thet, copilot]
+
 - Add support for Plone 6.1.x.
   Drop support for Plone 5.2.x.
   Update Makefile and dependencies, use uv and trusted publishing.
