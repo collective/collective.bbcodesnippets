@@ -1,3 +1,4 @@
 -c constraints.txt
 waitress_fastlisten
+horse-with-no-namespace
 -e .[test]
