@@ -41,7 +41,7 @@
   <!-- Controlpanel -->
   <browser:page
       name="bbcodesnippets-controlpanel"
-      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      for="plone.base.interfaces.IPloneSiteRoot"
       permission="plone.app.controlpanel.Markup"
       class=".controlpanel.BBCodeControlPanel"
       layer=".interfaces.IBBCodeSnippetsLayer"
@@ -95,7 +95,7 @@
   <!-- Demo -->
   <browser:page
       name="bbcodesnippets-demo"
-      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      for="plone.base.interfaces.IPloneSiteRoot"
       permission="plone.app.controlpanel.Markup"
       class=".demo.DemoView"
       template="demo.pt"

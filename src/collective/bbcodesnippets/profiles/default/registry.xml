@@ -4,13 +4,13 @@
            prefix="bbcodesnippets"
   />
 
-  <records interface="Products.CMFPlone.interfaces.IResourceRegistry"
+  <records interface="plone.base.interfaces.resources.IResourceRegistry"
            prefix="plone.resources/collective-bbcodesnippets"
   >
     <value key="js">++plone++collective.bbcodesnippets/collective.bbcodesnippets.js</value>
   </records>
 
-  <records interface="Products.CMFPlone.interfaces.IBundleRegistry"
+  <records interface="plone.base.interfaces.resources.IBundleRegistry"
            prefix="plone.bundles/collective-bbcodesnippets-app"
   >
     <value key="resources">
@@ -30,7 +30,7 @@
   </records>
 
   <record field="custom_plugins"
-          interface="Products.CMFPlone.interfaces.controlpanel.ITinyMCESchema"
+          interface="plone.base.interfaces.controlpanel.ITinyMCESchema"
           name="plone.custom_plugins"
   >
     <value purge="False">
