@@ -8,6 +8,9 @@ History
 - Integrate collective.ftw.upgrade.
   [thet]
 
+- Upgrade resource registry to Plone 6.
+  [thet]
+
 - Run plone-codemod migrations.
   [thet]
 

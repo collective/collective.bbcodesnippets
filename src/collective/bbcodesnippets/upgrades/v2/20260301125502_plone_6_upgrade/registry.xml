@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<registry>
+  <records interface="plone.base.interfaces.resources.IResourceRegistry"
+           prefix="plone.resources/collective-bbcodesnippets"
+           remove="True"
+  />
+</registry>
