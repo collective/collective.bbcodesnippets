@@ -5,6 +5,9 @@ History
 2.0.0b1 (2025-07-15)
 --------------------
 
+- Upgrade TinyMCE Plugin for TinyMCE 6/7/8.
+  [thet, copilot]
+
 - Update rollup.
   [thet, copilot]
 
