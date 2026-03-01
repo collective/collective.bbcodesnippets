@@ -5,6 +5,9 @@ History
 2.0.0b1 (2025-07-15)
 --------------------
 
+- Update rollup.
+  [thet, copilot]
+
 - Add support for Plone 6.1.x.
   Drop support for Plone 5.2.x.
   Update Makefile and dependencies, use uv and trusted publishing.
