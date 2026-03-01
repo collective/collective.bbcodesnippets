@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-  <version>1</version>
+  <!-- The version specification is managed by ftw.upgrade. -->
   <dependencies>
     <dependency>profile-plone.restapi:default</dependency>
   </dependencies>

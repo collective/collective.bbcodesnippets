@@ -24,8 +24,9 @@ classifiers = [
     "Development Status :: 5 - Production/Stable",
 ]
 dependencies = [
-    "plone.restapi",  # pulls in whole Products.CMFPlone too
     "bbcode>=1.1",
+    "collective.ftw.upgrade",
+    "plone.restapi",  # pulls in whole Products.CMFPlone too
 ]
 
 [project.urls]

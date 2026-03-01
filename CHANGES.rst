@@ -5,6 +5,9 @@ History
 2.0.0b1 (2025-07-15)
 --------------------
 
+- Integrate collective.ftw.upgrade.
+  [thet]
+
 - Run plone-codemod migrations.
   [thet]
 

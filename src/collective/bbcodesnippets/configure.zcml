@@ -32,6 +32,9 @@
       post_handler=".setuphandlers.uninstall"
       />
 
+  <!-- Has to go after the default profile definition -->
+  <include package=".upgrades" />
+
   <utility
       factory=".setuphandlers.HiddenProfiles"
       name="collective.bbcodesnippets-hiddenprofiles"
