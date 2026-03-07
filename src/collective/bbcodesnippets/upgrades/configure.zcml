@@ -1,16 +1,5 @@
-<configure
-    xmlns="http://namespaces.zope.org/zope"
-    xmlns:upgrade-step="http://namespaces.zope.org/collective.ftw.upgrade"
-    >
+<configure xmlns="http://namespaces.zope.org/zope">
 
-  <include
-      package="collective.ftw.upgrade"
-      file="meta.zcml"
-      />
-
-  <upgrade-step:directory
-      profile="collective.bbcodesnippets:default"
-      directory="v2"
-      />
+  <include file="2.zcml" />
 
 </configure>

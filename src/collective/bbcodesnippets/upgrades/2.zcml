@@ -1,0 +1,27 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:gs="http://namespaces.zope.org/genericsetup"
+    >
+
+  <gs:registerProfile
+      name="2"
+      title="Plone 6 upgrade."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      for="plone.base.interfaces.IMigratingPloneSiteRoot"
+      directory="profiles/2"
+      />
+
+  <gs:upgradeSteps
+      profile="collective.bbcodesnippets:default"
+      source="1"
+      destination="2"
+      >
+
+    <gs:upgradeDepends
+        title="Plone 6 upgrade."
+        import_profile="collective.bbcodesnippets.upgrades:2"
+        />
+
+  </gs:upgradeSteps>
+
+</configure>

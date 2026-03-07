@@ -5,9 +5,6 @@ History
 2.0.0b1 (2025-07-15)
 --------------------
 
-- Integrate collective.ftw.upgrade.
-  [thet]
-
 - Upgrade resource registry to Plone 6.
   [thet]
 
