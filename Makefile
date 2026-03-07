@@ -3,7 +3,6 @@
 #
 # DOMAINS:
 #: applications.cookiecutter
-#: applications.zest-releaser
 #: applications.zope
 #: core.base
 #: core.help
@@ -11,8 +10,6 @@
 #: core.mxfiles
 #: core.packages
 #: qa.coverage
-#: qa.isort
-#: qa.pyupgrade
 #: qa.ruff
 #: qa.test
 #: qa.zpretty
@@ -130,22 +127,6 @@ RUFF_FIXES?=false
 # Default: false
 RUFF_UNSAFE_FIXES?=false
 
-## qa.pyupgrade
-
-# Source folder to scan for XML and ZCML files.
-# Default: src
-PYUPGRADE_SRC?=src
-
-# Additional parameters for pyupgrade, see https://github.com/asottile/pyupgrade for details.
-# Default: --py38-plus
-PYUPGRADE_PARAMETERS?=--py38-plus
-
-## qa.isort
-
-# Source folder to scan for Python files to run isort on.
-# Default: src
-ISORT_SRC?=src
-
 ## core.mxfiles
 
 # The config file to use.
@@ -217,24 +198,6 @@ ZOPE_USER_PASSWORD?=No Default
 # Request to show all targets, descriptions and arguments for a given domain.
 # No default value.
 HELP_DOMAIN?=
-
-## applications.zest-releaser
-
-# Options to pass to zest.releaser prerelease command.
-# No default value.
-ZEST_RELEASER_PRERELEASE_OPTIONS?=
-
-# Options to pass to zest.releaser release command.
-# No default value.
-ZEST_RELEASER_RELEASE_OPTIONS?=
-
-# Options to pass to zest.releaser postrelease command.
-# No default value.
-ZEST_RELEASER_POSTRELEASE_OPTIONS?=
-
-# Options to pass to zest.releaser fullrelease command.
-# No default value.
-ZEST_RELEASER_FULLRELEASE_OPTIONS?=
 
 ##############################################################################
 # END SETTINGS - DO NOT EDIT BELOW THIS LINE
@@ -483,78 +446,6 @@ CHECK_TARGETS+=ruff-check
 FORMAT_TARGETS+=ruff-format
 DIRTY_TARGETS+=ruff-dirty
 CLEAN_TARGETS+=ruff-clean
-
-##############################################################################
-# pyupgrade
-##############################################################################
-
-# Adjust PYUPGRADE_SRC to respect PROJECT_PATH_PYTHON if still at default
-ifeq ($(PYUPGRADE_SRC),src)
-PYUPGRADE_SRC:=$(PYTHON_PROJECT_PREFIX)src
-endif
-
-PYUPGRADE_TARGET:=$(SENTINEL_FOLDER)/pyupgrade.sentinel
-$(PYUPGRADE_TARGET): $(MXENV_TARGET)
-	@echo "Install pyupgrade"
-	@$(PYTHON_PACKAGE_COMMAND) install pyupgrade
-	@touch $(PYUPGRADE_TARGET)
-
-.PHONY: pyupgrade-format
-pyupgrade-format: $(PYUPGRADE_TARGET)
-	@echo "Run pyupgrade format in: $(PYUPGRADE_SRC)"
-	@find $(PYUPGRADE_SRC) -name '*.py' -exec pyupgrade $(PYUPGRADE_PARAMETERS) {} +
-
-.PHONY: pyupgrade-dirty
-pyupgrade-dirty:
-	@rm -f $(PYUPGRADE_TARGET)
-
-.PHONY: pyupgrade-clean
-pyupgrade-clean: pyupgrade-dirty
-	@test -e $(MXENV_PYTHON) && $(MXENV_PYTHON) -m pip uninstall -y pyupgrade || :
-
-INSTALL_TARGETS+=$(PYUPGRADE_TARGET)
-FORMAT_TARGETS+=pyupgrade-format
-DIRTY_TARGETS+=pyupgrade-dirty
-CLEAN_TARGETS+=pyupgrade-clean
-
-##############################################################################
-# isort
-##############################################################################
-
-# Adjust ISORT_SRC to respect PROJECT_PATH_PYTHON if still at default
-ifeq ($(ISORT_SRC),src)
-ISORT_SRC:=$(PYTHON_PROJECT_PREFIX)src
-endif
-
-ISORT_TARGET:=$(SENTINEL_FOLDER)/isort.sentinel
-$(ISORT_TARGET): $(MXENV_TARGET)
-	@echo "Install isort"
-	@$(PYTHON_PACKAGE_COMMAND) install isort
-	@touch $(ISORT_TARGET)
-
-.PHONY: isort-check
-isort-check: $(ISORT_TARGET)
-	@echo "Run isort check"
-	@isort --check $(ISORT_SRC)
-
-.PHONY: isort-format
-isort-format: $(ISORT_TARGET)
-	@echo "Run isort format"
-	@isort $(ISORT_SRC)
-
-.PHONY: isort-dirty
-isort-dirty:
-	@rm -f $(ISORT_TARGET)
-
-.PHONY: isort-clean
-isort-clean: isort-dirty
-	@test -e $(MXENV_PYTHON) && $(MXENV_PYTHON) -m pip uninstall -y isort || :
-
-INSTALL_TARGETS+=$(ISORT_TARGET)
-CHECK_TARGETS+=isort-check
-FORMAT_TARGETS+=isort-format
-DIRTY_TARGETS+=isort-dirty
-CLEAN_TARGETS+=isort-clean
 
 ##############################################################################
 # mxfiles
@@ -808,48 +699,6 @@ PURGE_TARGETS+=zope-purge
 .PHONY: help
 help: $(MXENV_TARGET)
 	@mxmake help-generator
-
-##############################################################################
-# zest-releaser
-##############################################################################
-
-ZEST_RELEASER_TARGET:=$(SENTINEL_FOLDER)/zest-releaser.sentinel
-$(ZEST_RELEASER_TARGET): $(MXENV_TARGET)
-	@echo "Install zest.releaser"
-	@$(PYTHON_PACKAGE_COMMAND) install zest.releaser
-	@touch $(ZEST_RELEASER_TARGET)
-
-.PHONY: zest-releaser-prerelease
-zest-releaser-prerelease: $(ZEST_RELEASER_TARGET)
-	@echo "Run prerelease"
-	@prerelease $(ZEST_RELEASER_PRERELEASE_OPTIONS)
-
-.PHONY: zest-releaser-release
-zest-releaser-release: $(ZEST_RELEASER_TARGET)
-	@echo "Run release"
-	@release $(ZEST_RELEASER_RELEASE_OPTIONS)
-
-.PHONY: zest-releaser-postrelease
-zest-releaser-postrelease: $(ZEST_RELEASER_TARGET)
-	@echo "Run postrelease"
-	@postrelease $(ZEST_RELEASER_POSTRELEASE_OPTIONS)
-
-.PHONY: zest-releaser-fullrelease
-zest-releaser-fullrelease: $(ZEST_RELEASER_TARGET)
-	@echo "Run fullrelease"
-	@fullrelease $(ZEST_RELEASER_FULLRELEASE_OPTIONS)
-
-.PHONY: zest-releaser-dirty
-zest-releaser-dirty:
-	@rm -f $(ZEST_RELEASER_TARGET)
-
-.PHONY: zest-releaser-clean
-zest-releaser-clean: zest-releaser-dirty
-	@test -e $(MXENV_PYTHON) && $(MXENV_PYTHON) -m pip uninstall -y zest.releaser || :
-
-INSTALL_TARGETS+=$(ZEST_RELEASER_TARGET)
-DIRTY_TARGETS+=zest-releaser-dirty
-CLEAN_TARGETS+=zest-releaser-clean
 
 ##############################################################################
 # Custom includes
