@@ -150,21 +150,17 @@ def br_factory():
 
 
 @provider(IFormatterFactory)
-@copy_snippet(
-    """\
+@copy_snippet("""\
 [list]
     [*] item
 [/list]
-"""
-)
-@template_snippet(
-    """\
+""")
+@template_snippet("""\
 [list]
     [*] $TEXT
     [*] $CURSOR
 [/list]
-"""
-)
+""")
 def list_factory():
     """List with bullets or numbers. Use '*' for bullet points or for numbers one out of '1', '01, 'a', 'A', 'i' or 'I'.
     Bullet points: [list][*] item[/list]
@@ -183,11 +179,11 @@ def list_factory():
         }
         tag = "ol" if list_type in css_opts else "ul"
         css = (
-            ' style="list-style-type:%s;"' % css_opts[list_type]
+            f' style="list-style-type: {css_opts[list_type]};"'
             if list_type in css_opts
             else ""
         )
-        return "<{}{}>{}</{}>".format(tag, css, value, tag)
+        return f"<{tag}{css}>{value}</{tag}>"
 
     return _render_list, {
         "transform_newlines": False,
@@ -201,9 +197,9 @@ def list_item_factory():
     # no doc string, so will not appear in documentation, helper for list
     def _render_list_item(name, value, options, parent, context):
         if not parent or parent.tag_name != "list":
-            return "[*]%s<br />" % value
+            return f"[*]{value}<br />"
 
-        return "<li>%s</li>" % value
+        return f"<li>{value}</li>"
 
     return _render_list_item, {
         "newline_closes": True,
@@ -249,15 +245,12 @@ def color_factory():
         if "color" in options:
             color = options["color"].strip()
         elif options:
-            color = list(options.keys())[0].strip()
+            color = next(iter(options.keys())).strip()
         else:
             return value
         match = re.match(r"^([a-z]+)|^(#[a-f0-9]{3,6})", color, re.I)
         color = match.group() if match else "inherit"
-        return '<span style="color:{color};">{value}</span>'.format(
-            color=color,
-            value=value,
-        )
+        return f'<span style="color:{color};">{value}</span>'
 
     return _render_color(), {}
 

@@ -5,30 +5,28 @@ description = "BBCode Snippet Support for Plone"
 keywords = ["bbcode", "plone"]
 readme = "README.rst"
 
-authors = [
-    {name = "Jens Klein", email = "jk@kleinundpartner.at"},
-]
+authors = [{ name = "Jens Klein", email = "jk@kleinundpartner.at" }]
 requires-python = ">=3.11"
 license = { text = "GPL 2.0" }
 classifiers = [
-    "Environment :: Web Environment",
-    "Framework :: Plone",
-    "Framework :: Plone :: Addon",
-    "Framework :: Plone :: 6.1",
-    "Framework :: Plone :: 6.2",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: 3.14",
-    "Operating System :: OS Independent",
-    "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
-    "Development Status :: 5 - Production/Stable",
+  "Environment :: Web Environment",
+  "Framework :: Plone",
+  "Framework :: Plone :: Addon",
+  "Framework :: Plone :: 6.1",
+  "Framework :: Plone :: 6.2",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Operating System :: OS Independent",
+  "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+  "Development Status :: 5 - Production/Stable",
 ]
 dependencies = [
-    "bbcode>=1.1",
-    "collective.ftw.upgrade",
-    "plone.restapi",  # pulls in whole Products.CMFPlone too
+  "bbcode>=1.1",
+  "collective.ftw.upgrade",
+  "plone.restapi",          # pulls in whole Products.CMFPlone too
 ]
 
 [project.urls]
@@ -38,11 +36,7 @@ Source = "https://github.com/collective/collective.bbcodesnippets"
 Issues = "https://github.com/collective/collective.bbcodesnippets/issues"
 
 [project.optional-dependencies]
-test = [
-    "plone.app.contenttypes[test]",
-    "pytest-plone",
-    "pdbpp",
-]
+test = ["plone.app.contenttypes[test]", "pytest-plone", "pdbpp"]
 
 [build-system]
 requires = ["hatchling"]
@@ -52,27 +46,30 @@ build-backend = "hatchling.build"
 packages = ["src/collective"]
 
 
-
 [tool.pytest.ini_options]
 minversion = "6.0"
-testpaths = [
-    "test",
-]
-
-[tool.isort]
-profile = "plone"
+testpaths = ["test"]
 
 [tool.codespell]
 ignore-words-list = "discreet,"
 skip = './venv/*'
 
-[tool.check-manifest]
-ignore = [
-    ".editorconfig",
-    ".pre-commit-config.yaml",
-    "tox.ini",
-    "mypy.ini",
-    ".flake8",
-    "mx.ini",
+[tool.ruff]
+target-version = "py312"
+extend-exclude = ["example"]
 
-]
+[tool.ruff.lint]
+select = ["A", "B", "C4", "E", "F", "I", "RUF", "SIM", "T20", "UP", "W"]
+ignore = ["E501", "RUF001", "RUF002", "SIM105"]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+from-first = true
+lines-after-imports = 2
+lines-between-types = 1
+no-sections = true
+order-by-type = false
+
+[tool.ruff.lint.pycodestyle]
+max-line-length = 120
+max-doc-length = 120

@@ -3,7 +3,6 @@
 #
 # DOMAINS:
 #: applications.cookiecutter
-#: applications.zest-releaser
 #: applications.zope
 #: core.base
 #: core.help
@@ -11,8 +10,6 @@
 #: core.mxfiles
 #: core.packages
 #: qa.coverage
-#: qa.isort
-#: qa.pyupgrade
 #: qa.ruff
 #: qa.test
 #: qa.zpretty
@@ -45,6 +42,13 @@ INCLUDE_MAKEFILE?=include.mk
 # No default value.
 EXTRA_PATH?=
 
+# Path to Python project relative to Makefile (repository root).
+# Leave empty if Python project is in the same directory as Makefile.
+# For monorepo setups, set to subdirectory name (e.g., `backend`).
+# Future-proofed for multi-language monorepos (e.g., PROJECT_PATH_NODEJS).
+# No default value.
+PROJECT_PATH_PYTHON?=
+
 ## core.mxenv
 
 # Primary Python interpreter to use. It is used to create the
@@ -56,22 +60,23 @@ EXTRA_PATH?=
 PRIMARY_PYTHON?=3.13
 
 # Minimum required Python version.
-# Default: 3.9
+# Default: 3.10
 PYTHON_MIN_VERSION?=3.7
 
 # Install packages using the given package installer method.
-# Supported are `pip` and `uv`. If uv is used, its global availability is
-# checked. Otherwise, it is installed, either in the virtual environment or
-# using the `PRIMARY_PYTHON`, dependent on the `VENV_ENABLED` setting. If
-# `VENV_ENABLED` and uv is selected, uv is used to create the virtual
-# environment.
+# Supported are `pip` and `uv`. When `uv` is selected, a global installation
+# is auto-detected and used if available. Otherwise, uv is installed in the
+# virtual environment or using `PRIMARY_PYTHON`, depending on the
+# `VENV_ENABLED` setting.
 # Default: pip
 PYTHON_PACKAGE_INSTALLER?=uv
 
-# Flag whether to use a global installed 'uv' or install
-# it in the virtual environment.
-# Default: false
-MXENV_UV_GLOBAL?=true
+# Python version for UV to install/use when creating virtual
+# environments with global UV. Passed to `uv venv -p VALUE`. Supports version
+# specs like `3.11`, `3.14`, `cpython@3.14`. Defaults to PRIMARY_PYTHON value
+# for backward compatibility.
+# Default: $(PRIMARY_PYTHON)
+UV_PYTHON?=$(PRIMARY_PYTHON)
 
 # Flag whether to use virtual environment. If `false`, the
 # interpreter according to `PRIMARY_PYTHON` found in `PATH` is used.
@@ -112,21 +117,15 @@ ZPRETTY_SRC?=src
 # Default: src
 RUFF_SRC?=src
 
-## qa.pyupgrade
+# Enable ruff check --fix when running ruff-format.
+# Set to `true` to enable automatic fixes.
+# Default: false
+RUFF_FIXES?=false
 
-# Source folder to scan for XML and ZCML files.
-# Default: src
-PYUPGRADE_SRC?=src
-
-# Additional parameters for pyupgrade, see https://github.com/asottile/pyupgrade for details.
-# Default: --py38-plus
-PYUPGRADE_PARAMETERS?=--py38-plus
-
-## qa.isort
-
-# Source folder to scan for Python files to run isort on.
-# Default: src
-ISORT_SRC?=src
+# Enable unsafe fixes when RUFF_FIXES is enabled.
+# Set to `true` to enable unsafe fixes.
+# Default: false
+RUFF_UNSAFE_FIXES?=false
 
 ## core.mxfiles
 
@@ -200,24 +199,6 @@ ZOPE_USER_PASSWORD?=No Default
 # No default value.
 HELP_DOMAIN?=
 
-## applications.zest-releaser
-
-# Options to pass to zest.releaser prerelease command.
-# No default value.
-ZEST_RELEASER_PRERELEASE_OPTIONS?=
-
-# Options to pass to zest.releaser release command.
-# No default value.
-ZEST_RELEASER_RELEASE_OPTIONS?=
-
-# Options to pass to zest.releaser postrelease command.
-# No default value.
-ZEST_RELEASER_POSTRELEASE_OPTIONS?=
-
-# Options to pass to zest.releaser fullrelease command.
-# No default value.
-ZEST_RELEASER_FULLRELEASE_OPTIONS?=
-
 ##############################################################################
 # END SETTINGS - DO NOT EDIT BELOW THIS LINE
 ##############################################################################
@@ -231,6 +212,9 @@ TYPECHECK_TARGETS?=
 FORMAT_TARGETS?=
 
 export PATH:=$(if $(EXTRA_PATH),$(EXTRA_PATH):,)$(PATH)
+
+# Helper variable: adds trailing slash to PROJECT_PATH_PYTHON only if non-empty
+PYTHON_PROJECT_PREFIX=$(if $(PROJECT_PATH_PYTHON),$(PROJECT_PATH_PYTHON)/,)
 
 # Defensive settings for make: https://tech.davis-hansson.com/p/make/
 SHELL:=bash
@@ -272,30 +256,61 @@ else
 MXENV_PYTHON=$(PRIMARY_PYTHON)
 endif
 
-# Determine the package installer
+# Determine the package installer with non-interactive flags
 ifeq ("$(PYTHON_PACKAGE_INSTALLER)","uv")
-PYTHON_PACKAGE_COMMAND=uv pip
+PYTHON_PACKAGE_COMMAND=uv pip --no-progress
 else
 PYTHON_PACKAGE_COMMAND=$(MXENV_PYTHON) -m pip
 endif
 
+# Auto-detect global uv availability (simple existence check)
+ifeq ("$(PYTHON_PACKAGE_INSTALLER)","uv")
+UV_AVAILABLE:=$(shell command -v uv >/dev/null 2>&1 && echo "true" || echo "false")
+else
+UV_AVAILABLE:=false
+endif
+
+# Determine installation strategy
+# depending on the PYTHON_PACKAGE_INSTALLER and UV_AVAILABLE
+# - both vars can be false or
+# - one of them can be true,
+# - but never boths.
+USE_GLOBAL_UV:=$(shell [[ "$(PYTHON_PACKAGE_INSTALLER)" == "uv" && "$(UV_AVAILABLE)" == "true" ]] && echo "true" || echo "false")
+USE_LOCAL_UV:=$(shell [[ "$(PYTHON_PACKAGE_INSTALLER)" == "uv" && "$(UV_AVAILABLE)" == "false" ]] && echo "true" || echo "false")
+
+# Check if global UV is outdated (non-blocking warning)
+ifeq ("$(USE_GLOBAL_UV)","true")
+UV_OUTDATED:=$(shell uv self update --dry-run 2>&1 | grep -q "Would update" && echo "true" || echo "false")
+else
+UV_OUTDATED:=false
+endif
+
 MXENV_TARGET:=$(SENTINEL_FOLDER)/mxenv.sentinel
 $(MXENV_TARGET): $(SENTINEL)
-ifneq ("$(PYTHON_PACKAGE_INSTALLER)$(MXENV_UV_GLOBAL)","uvfalse")
+	# Validation: Check Python version if not using global uv
+ifneq ("$(USE_GLOBAL_UV)","true")
 	@$(PRIMARY_PYTHON) -c "import sys; vi = sys.version_info; sys.exit(1 if (int(vi[0]), int(vi[1])) >= tuple(map(int, '$(PYTHON_MIN_VERSION)'.split('.'))) else 0)" \
 		&& echo "Need Python >= $(PYTHON_MIN_VERSION)" && exit 1 || :
 else
-	@echo "Use Python $(PYTHON_MIN_VERSION) over uv"
+	@echo "Using global uv for Python $(UV_PYTHON)"
 endif
+	# Validation: Check VENV_FOLDER is set if venv enabled
 	@[[ "$(VENV_ENABLED)" == "true" && "$(VENV_FOLDER)" == "" ]] \
 		&& echo "VENV_FOLDER must be configured if VENV_ENABLED is true" && exit 1 || :
-	@[[ "$(VENV_ENABLED)$(PYTHON_PACKAGE_INSTALLER)" == "falseuv" ]] \
+	# Validation: Check uv not used with system Python
+	@[[ "$(VENV_ENABLED)" == "false" && "$(PYTHON_PACKAGE_INSTALLER)" == "uv" ]] \
 		&& echo "Package installer uv does not work with a global Python interpreter." && exit 1 || :
+	# Warning: Notify if global UV is outdated
+ifeq ("$(UV_OUTDATED)","true")
+	@echo "WARNING: A newer version of uv is available. Run 'uv self update' to upgrade."
+endif
+
+	# Create virtual environment
 ifeq ("$(VENV_ENABLED)", "true")
 ifeq ("$(VENV_CREATE)", "true")
-ifeq ("$(PYTHON_PACKAGE_INSTALLER)$(MXENV_UV_GLOBAL)","uvtrue")
-	@echo "Setup Python Virtual Environment using package 'uv' at '$(VENV_FOLDER)'"
-	@uv venv -p $(PRIMARY_PYTHON) --seed $(VENV_FOLDER)
+ifeq ("$(USE_GLOBAL_UV)","true")
+	@echo "Setup Python Virtual Environment using global uv at '$(VENV_FOLDER)'"
+	@uv venv --allow-existing --no-progress -p $(UV_PYTHON) --seed $(VENV_FOLDER)
 else
 	@echo "Setup Python Virtual Environment using module 'venv' at '$(VENV_FOLDER)'"
 	@$(PRIMARY_PYTHON) -m venv $(VENV_FOLDER)
@@ -305,10 +320,14 @@ endif
 else
 	@echo "Using system Python interpreter"
 endif
-ifeq ("$(PYTHON_PACKAGE_INSTALLER)$(MXENV_UV_GLOBAL)","uvfalse")
-	@echo "Install uv"
+
+	# Install uv locally if needed
+ifeq ("$(USE_LOCAL_UV)","true")
+	@echo "Install uv in virtual environment"
 	@$(MXENV_PYTHON) -m pip install uv
 endif
+
+	# Install/upgrade core packages
 	@$(PYTHON_PACKAGE_COMMAND) install -U pip setuptools wheel
 	@echo "Install/Update MXStack Python packages"
 	@$(PYTHON_PACKAGE_COMMAND) install -U $(MXDEV) $(MXMAKE)
@@ -339,6 +358,11 @@ CLEAN_TARGETS+=mxenv-clean
 ##############################################################################
 # zpretty
 ##############################################################################
+
+# Adjust ZPRETTY_SRC to respect PROJECT_PATH_PYTHON if still at default
+ifeq ($(ZPRETTY_SRC),src)
+ZPRETTY_SRC:=$(PYTHON_PROJECT_PREFIX)src
+endif
 
 ZPRETTY_TARGET:=$(SENTINEL_FOLDER)/zpretty.sentinel
 $(ZPRETTY_TARGET): $(MXENV_TARGET)
@@ -374,6 +398,20 @@ CLEAN_TARGETS+=zpretty-clean
 # ruff
 ##############################################################################
 
+# Adjust RUFF_SRC to respect PROJECT_PATH_PYTHON if still at default
+ifeq ($(RUFF_SRC),src)
+RUFF_SRC:=$(PYTHON_PROJECT_PREFIX)src
+endif
+
+# Build ruff check flags based on settings
+ifeq ("$(RUFF_FIXES)","true")
+ifeq ("$(RUFF_UNSAFE_FIXES)","true")
+RUFF_FIX_FLAGS=--fix --unsafe-fixes
+else
+RUFF_FIX_FLAGS=--fix
+endif
+endif
+
 RUFF_TARGET:=$(SENTINEL_FOLDER)/ruff.sentinel
 $(RUFF_TARGET): $(MXENV_TARGET)
 	@echo "Install Ruff"
@@ -389,6 +427,10 @@ ruff-check: $(RUFF_TARGET)
 ruff-format: $(RUFF_TARGET)
 	@echo "Run ruff format"
 	@ruff format $(RUFF_SRC)
+ifeq ("$(RUFF_FIXES)","true")
+	@echo "Run ruff check $(RUFF_FIX_FLAGS)"
+	@ruff check $(RUFF_FIX_FLAGS) $(RUFF_SRC)
+endif
 
 .PHONY: ruff-dirty
 ruff-dirty:
@@ -404,68 +446,6 @@ CHECK_TARGETS+=ruff-check
 FORMAT_TARGETS+=ruff-format
 DIRTY_TARGETS+=ruff-dirty
 CLEAN_TARGETS+=ruff-clean
-
-##############################################################################
-# pyupgrade
-##############################################################################
-
-PYUPGRADE_TARGET:=$(SENTINEL_FOLDER)/pyupgrade.sentinel
-$(PYUPGRADE_TARGET): $(MXENV_TARGET)
-	@echo "Install pyupgrade"
-	@$(PYTHON_PACKAGE_COMMAND) install pyupgrade
-	@touch $(PYUPGRADE_TARGET)
-
-.PHONY: pyupgrade-format
-pyupgrade-format: $(PYUPGRADE_TARGET)
-	@echo "Run pyupgrade format in: $(PYUPGRADE_SRC)"
-	@find $(PYUPGRADE_SRC) -name '*.py' -exec pyupgrade $(PYUPGRADE_PARAMETERS) {} +
-
-.PHONY: pyupgrade-dirty
-pyupgrade-dirty:
-	@rm -f $(PYUPGRADE_TARGET)
-
-.PHONY: pyupgrade-clean
-pyupgrade-clean: pyupgrade-dirty
-	@test -e $(MXENV_PYTHON) && $(MXENV_PYTHON) -m pip uninstall -y pyupgrade || :
-
-INSTALL_TARGETS+=$(PYUPGRADE_TARGET)
-FORMAT_TARGETS+=pyupgrade-format
-DIRTY_TARGETS+=pyupgrade-dirty
-CLEAN_TARGETS+=pyupgrade-clean
-
-##############################################################################
-# isort
-##############################################################################
-
-ISORT_TARGET:=$(SENTINEL_FOLDER)/isort.sentinel
-$(ISORT_TARGET): $(MXENV_TARGET)
-	@echo "Install isort"
-	@$(PYTHON_PACKAGE_COMMAND) install isort
-	@touch $(ISORT_TARGET)
-
-.PHONY: isort-check
-isort-check: $(ISORT_TARGET)
-	@echo "Run isort check"
-	@isort --check $(ISORT_SRC)
-
-.PHONY: isort-format
-isort-format: $(ISORT_TARGET)
-	@echo "Run isort format"
-	@isort $(ISORT_SRC)
-
-.PHONY: isort-dirty
-isort-dirty:
-	@rm -f $(ISORT_TARGET)
-
-.PHONY: isort-clean
-isort-clean: isort-dirty
-	@test -e $(MXENV_PYTHON) && $(MXENV_PYTHON) -m pip uninstall -y isort || :
-
-INSTALL_TARGETS+=$(ISORT_TARGET)
-CHECK_TARGETS+=isort-check
-FORMAT_TARGETS+=isort-format
-DIRTY_TARGETS+=isort-dirty
-CLEAN_TARGETS+=isort-clean
 
 ##############################################################################
 # mxfiles
@@ -494,7 +474,7 @@ else
 	@echo "[settings]" > $(PROJECT_CONFIG)
 endif
 
-LOCAL_PACKAGE_FILES:=$(wildcard pyproject.toml setup.cfg setup.py requirements.txt constraints.txt)
+LOCAL_PACKAGE_FILES:=$(wildcard $(PYTHON_PROJECT_PREFIX)pyproject.toml $(PYTHON_PROJECT_PREFIX)setup.cfg $(PYTHON_PROJECT_PREFIX)setup.py $(PYTHON_PROJECT_PREFIX)requirements.txt $(PYTHON_PROJECT_PREFIX)constraints.txt)
 
 FILES_TARGET:=requirements-mxdev.txt
 $(FILES_TARGET): $(PROJECT_CONFIG) $(MXENV_TARGET) $(SOURCES_TARGET) $(LOCAL_PACKAGE_FILES)
@@ -719,48 +699,6 @@ PURGE_TARGETS+=zope-purge
 .PHONY: help
 help: $(MXENV_TARGET)
 	@mxmake help-generator
-
-##############################################################################
-# zest-releaser
-##############################################################################
-
-ZEST_RELEASER_TARGET:=$(SENTINEL_FOLDER)/zest-releaser.sentinel
-$(ZEST_RELEASER_TARGET): $(MXENV_TARGET)
-	@echo "Install zest.releaser"
-	@$(PYTHON_PACKAGE_COMMAND) install zest.releaser
-	@touch $(ZEST_RELEASER_TARGET)
-
-.PHONY: zest-releaser-prerelease
-zest-releaser-prerelease: $(ZEST_RELEASER_TARGET)
-	@echo "Run prerelease"
-	@prerelease $(ZEST_RELEASER_PRERELEASE_OPTIONS)
-
-.PHONY: zest-releaser-release
-zest-releaser-release: $(ZEST_RELEASER_TARGET)
-	@echo "Run release"
-	@release $(ZEST_RELEASER_RELEASE_OPTIONS)
-
-.PHONY: zest-releaser-postrelease
-zest-releaser-postrelease: $(ZEST_RELEASER_TARGET)
-	@echo "Run postrelease"
-	@postrelease $(ZEST_RELEASER_POSTRELEASE_OPTIONS)
-
-.PHONY: zest-releaser-fullrelease
-zest-releaser-fullrelease: $(ZEST_RELEASER_TARGET)
-	@echo "Run fullrelease"
-	@fullrelease $(ZEST_RELEASER_FULLRELEASE_OPTIONS)
-
-.PHONY: zest-releaser-dirty
-zest-releaser-dirty:
-	@rm -f $(ZEST_RELEASER_TARGET)
-
-.PHONY: zest-releaser-clean
-zest-releaser-clean: zest-releaser-dirty
-	@test -e $(MXENV_PYTHON) && $(MXENV_PYTHON) -m pip uninstall -y zest.releaser || :
-
-INSTALL_TARGETS+=$(ZEST_RELEASER_TARGET)
-DIRTY_TARGETS+=zest-releaser-dirty
-CLEAN_TARGETS+=zest-releaser-clean
 
 ##############################################################################
 # Custom includes

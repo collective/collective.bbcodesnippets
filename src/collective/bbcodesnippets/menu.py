@@ -24,10 +24,13 @@ class BBCodeSnippetesMainMenuItem(BrowserSubMenuItem):
     submenuId = "bbcodesnippets_menu"
 
     order = 1000
-    extra = {
-        "id": "bbcodesnippets-menu",
-        "li_class": "plonetoolbar-content-bbcodesnippets",
-    }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.extra = {
+            "id": "bbcodesnippets-menu",
+            "li_class": "plonetoolbar-content-bbcodesnippets",
+        }
 
     @property
     def action(self):
@@ -59,11 +62,10 @@ class BBCodeSnippetesMenu(BrowserMenu):
             results.append(
                 {
                     "title": name,
-                    "description": "Copy {} to clipboard.".format(
-                        factory.__bbcode_copy_snippet__
-                    ),
-                    "action": "javascript:navigator.clipboard.writeText('{}');document.getElementById('bbcodesnippets-menu').classList.remove('active');".format(
-                        factory.__bbcode_copy_snippet__
+                    "description": f"Copy {factory.__bbcode_copy_snippet__} to clipboard.",
+                    "action": (
+                        f"javascript:navigator.clipboard.writeText('{factory.__bbcode_copy_snippet__}');"
+                        f"document.getElementById('bbcodesnippets-menu').classList.remove('active');"
                     ),
                     "selected": False,
                     "icon": "",
