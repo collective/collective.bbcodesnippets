@@ -23,6 +23,7 @@ pip-selfcheck.json
 devsrc/
 .vscode/
 .installed.cfg
+.mxdev_cache/
 .mxmake/
 .pydevproject
 .project
