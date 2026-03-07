@@ -7,6 +7,7 @@ from zope.interface import Interface
 
 import re
 
+
 _DETECTOR_RE = re.compile(r".*\[[a-z].*?\]")
 
 

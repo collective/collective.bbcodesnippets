@@ -100,8 +100,14 @@ class TestTransformer(TestCase):
     def test_complex_html(self, *args):
         """All should  be transformed."""
 
-        source = '<div>[dummy]<article>1[dummy] 2<br>3[dummy] 4 <a href="">5 [dummy] 6</a>[dummy]</article><p>[dummy]</p>[dummy]</div>'
-        transformed = b'<div>DUM<hr/>MY<article>1DUM<hr/>MY 2<br/>3DUM<hr/>MY 4 <a href="">5 DUM<hr/>MY 6</a>DUM<hr/>MY</article><p>DUM<hr/>MY</p>DUM<hr/>MY</div>'
+        source = (
+            '<div>[dummy]<article>1[dummy] 2<br>3[dummy] 4 <a href="">5 [dummy] 6</a>[dummy]</article>'
+            "<p>[dummy]</p>[dummy]</div>"
+        )
+        transformed = (
+            b'<div>DUM<hr/>MY<article>1DUM<hr/>MY 2<br/>3DUM<hr/>MY 4 <a href="">5 DUM<hr/>MY 6</a>DUM<hr/>MY</article>'
+            b"<p>DUM<hr/>MY</p>DUM<hr/>MY</div>"
+        )
 
         self._register_formatter()
         result = self._do_transform(source)
@@ -110,8 +116,14 @@ class TestTransformer(TestCase):
     def test_deny_on_complex_html(self, *args):
         """Textarea should not be transformed."""
 
-        source = '<div>[dummy]<textarea>1[dummy] 2<br>3[dummy] 4 <a href="">5 [dummy] 6</a>[dummy]</textarea><p>[dummy]</p>[dummy]</div>'
-        transformed = b'<div>DUM<hr/>MY<textarea>1[dummy] 2<br/>3[dummy] 4 <a href="">5 [dummy] 6</a>[dummy]</textarea><p>DUM<hr/>MY</p>DUM<hr/>MY</div>'
+        source = (
+            '<div>[dummy]<textarea>1[dummy] 2<br>3[dummy] 4 <a href="">5 [dummy] 6</a>[dummy]</textarea>'
+            "<p>[dummy]</p>[dummy]</div>"
+        )
+        transformed = (
+            b'<div>DUM<hr/>MY<textarea>1[dummy] 2<br/>3[dummy] 4 <a href="">5 [dummy] 6</a>[dummy]</textarea>'
+            b"<p>DUM<hr/>MY</p>DUM<hr/>MY</div>"
+        )
 
         self._register_formatter()
         result = self._do_transform(source)

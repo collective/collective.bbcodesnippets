@@ -33,7 +33,8 @@ class BBCodeSnippetsTransform:
         self.valid = (
             contentType is not None
             and contentType.startswith("text/html")
-            and request.response.getHeader("Content-Encoding") not in (
+            and request.response.getHeader("Content-Encoding")
+            not in (
                 "zip",
                 "deflate",
                 "compress",
@@ -112,9 +113,7 @@ class BBCodeSnippetsTransform:
                 return
             # wrap in element, now we have the new subtree
             try:
-                new_tail_structure = lxmlhtml.fromstring(
-                    f"<bbcs>{formatted}</bbcs>"
-                )
+                new_tail_structure = lxmlhtml.fromstring(f"<bbcs>{formatted}</bbcs>")
             except Exception:
                 logger.exception("BBCode result is not valid HTML, failed.")
                 return
@@ -138,10 +137,7 @@ class BBCodeSnippetsTransform:
                     continue
                 _process_node(cel)
 
-            if el.text and el.text.strip():
-                last_sub = _handle_text(el)
-            else:
-                last_sub = None
+            last_sub = _handle_text(el) if el.text and el.text.strip() else None
             if el.tail and el.tail.strip():
                 _handle_tail(el, last_sub)
 
