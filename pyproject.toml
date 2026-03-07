@@ -39,12 +39,15 @@ Issues = "https://github.com/collective/collective.bbcodesnippets/issues"
 test = ["plone.app.contenttypes[test]", "pytest-plone", "pdbpp"]
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/collective"]
 
+[tool.hatch.version]
+source = "vcs"
+raw-options = { local_scheme = "no-local-version" }
 
 [tool.pytest.ini_options]
 minversion = "6.0"
